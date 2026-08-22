@@ -1,3 +1,7 @@
+"use client";
+
+import { useId } from "react";
+
 const BRANDS: Record<string, { bg: string; fg: string; label: string }> = {
   "Tommy Hilfiger": { bg: "#0f2d52", fg: "#ffffff", label: "TOMMY HILFIGER" },
   "Calvin Klein": { bg: "#000000", fg: "#ffffff", label: "CALVIN KLEIN JEANS" },
@@ -17,6 +21,9 @@ const BRANDS: Record<string, { bg: string; fg: string; label: string }> = {
   Nautica: { bg: "#003366", fg: "#ffffff", label: "NAUTICA" },
 };
 
+const POLOS = ["Tommy Hilfiger", "Polo Ralph Lauren", "Nautica", "Champion"];
+const CREWS = ["Nautica", "Abercrombie & Fitch", "American Eagle", "Gap", "Under Armour", "Champion"];
+
 function tamLabel(len: number): number {
   if (len <= 8) return 13;
   if (len <= 12) return 11;
@@ -25,36 +32,42 @@ function tamLabel(len: number): number {
   return 7;
 }
 
-const TEE =
-  "M118 80 L86 98 L58 154 L96 174 L112 148 L112 332 Q200 346 288 332 L288 148 L304 174 L342 154 L314 98 L282 80 Q240 106 200 106 Q160 106 118 80 Z";
-const JEANS =
-  "M124 98 L276 98 L296 340 L214 340 L202 192 L198 192 L186 340 L104 340 Z";
+interface Tono {
+  light: string;
+  base: string;
+  dark: string;
+}
 
-type Palette = { light: string; base: string; dark: string };
-
-function paleta(marca?: string): Palette {
+function paleta(marca: string): Tono {
   switch (marca) {
     case "Tommy Hilfiger":
-      return { light: "#2b4f85", base: "#1d3a66", dark: "#122544" };
+      return { light: "#4a7fc9", base: "#2a5da8", dark: "#173e78" };
     case "Calvin Klein":
-      return { light: "#3a3a42", base: "#232329", dark: "#101014" };
+      return { light: "#5a6068", base: "#33373d", dark: "#181b1f" };
+    case "Hollister":
+      return { light: "#e66a8a", base: "#d63f68", dark: "#a12547" };
     case "Polo Ralph Lauren":
-      return { light: "#2b4a7d", base: "#14264a", dark: "#0b1730" };
+      return { light: "#3457a5", base: "#1e3a75", dark: "#10234c" };
     case "Levi's":
-    case "Wrangler":
-      return { light: "#3d5c85", base: "#23405f", dark: "#122338" };
+      return { light: "#5a86c2", base: "#39629e", dark: "#24436f" };
     case "Nike":
+      return { light: "#6a6f77", base: "#42464d", dark: "#23262b" };
     case "Under Armour":
-      return { light: "#4b5563", base: "#23272f", dark: "#0d1015" };
+      return { light: "#4a4f57", base: "#282c33", dark: "#12151a" };
     case "Gap":
-    case "Old Navy":
-      return { light: "#3b6fc9", base: "#1d4a94", dark: "#0e2c5c" };
+      return { light: "#4a76bd", base: "#27549c", dark: "#153567" };
     case "Champion":
-      return { light: "#94a3b8", base: "#5b6b7e", dark: "#37414e" };
+      return { light: "#889098", base: "#565d66", dark: "#30353c" };
     case "Carhartt":
-      return { light: "#a9743c", base: "#7a4e21", dark: "#4c2f12" };
+      return { light: "#b5793d", base: "#8f551f", dark: "#5f370f" };
     case "The North Face":
       return { light: "#e8eaee", base: "#b9bec7", dark: "#767d89" };
+    case "American Eagle":
+      return { light: "#b04a67", base: "#8b1e3f", dark: "#5f1129" };
+    case "Old Navy":
+      return { light: "#3d6ba8", base: "#1e4679", dark: "#0f2b52" };
+    case "Wrangler":
+      return { light: "#c98d4a", base: "#a36420", dark: "#6f420f" };
     case "Abercrombie & Fitch":
       return { light: "#4a6a55", base: "#2c4638", dark: "#16281f" };
     case "Nautica":
@@ -64,273 +77,239 @@ function paleta(marca?: string): Palette {
   }
 }
 
+function outline(cat: string): string {
+  if (cat === "pantalon") {
+    return "M158 118 L242 118 L248 142 L237 332 L207 332 L200 214 L193 332 L163 332 L152 142 Z";
+  }
+  if (cat === "chaqueta") {
+    return "M148 118 L196 128 L196 322 L154 322 L140 168 Z M252 118 L204 128 L204 322 L246 322 L260 168 Z";
+  }
+  if (cat === "gorra") {
+    return "M132 196 C132 138 162 104 200 104 C238 104 268 138 268 196 L268 208 L132 208 Z";
+  }
+  return "M150 120 L118 134 L94 178 L127 194 L136 174 L136 302 Q200 314 264 302 L264 174 L273 194 L306 178 L282 134 L250 120 Q226 140 200 140 Q174 140 150 120 Z";
+}
+
+function Detalles({ cat, marca, p }: { cat: string; marca: string; p: Tono }) {
+  if (cat === "gorra") {
+    return (
+      <>
+        <path d="M268 196 C310 198 348 214 352 232 C354 244 340 250 318 246 C292 240 268 228 264 216 Z" fill={p.dark} />
+        <path d="M268 196 C308 199 344 213 350 230" fill="none" stroke={p.base} strokeWidth="2" opacity="0.6" />
+        <path d="M200 104 C186 130 180 165 182 206" fill="none" stroke={p.dark} strokeWidth="1.6" opacity="0.7" />
+        <path d="M200 104 C214 130 220 165 218 206" fill="none" stroke={p.dark} strokeWidth="1.6" opacity="0.7" />
+        <path d="M166 108 C154 132 148 166 148 202" fill="none" stroke={p.dark} strokeWidth="1.2" opacity="0.5" />
+        <path d="M234 108 C246 132 252 166 252 202" fill="none" stroke={p.dark} strokeWidth="1.2" opacity="0.5" />
+        <circle cx="200" cy="106" r="5" fill={p.dark} stroke="#ffffff44" />
+        <circle cx="164" cy="150" r="2" fill="#0f172a" opacity="0.55" />
+        <circle cx="236" cy="150" r="2" fill="#0f172a" opacity="0.55" />
+      </>
+    );
+  }
+  if (cat === "pantalon") {
+    return (
+      <>
+        <rect x="154" y="116" width="92" height="18" rx="3" fill={p.dark} />
+        <rect x="154" y="116" width="92" height="5" rx="2" fill="#ffffff" opacity="0.12" />
+        {[162, 183, 198, 213, 234].map((x) => (
+          <rect key={x} x={x} y="114" width="5" height="14" rx="2" fill={p.dark} stroke="#00000033" strokeWidth="0.6" />
+        ))}
+        <circle cx="212" cy="139" r="3.4" fill="#b08d3e" stroke="#6b5320" strokeWidth="0.8" />
+        <path d="M208 141 L208 176" stroke={p.dark} strokeWidth="1.4" opacity="0.8" />
+        <path d="M188 140 Q200 146 212 140" fill="none" stroke={p.dark} strokeWidth="1.6" opacity="0.7" />
+        <path d="M170 236 Q185 246 200 238" fill="none" stroke={p.dark} strokeWidth="1.6" opacity="0.6" />
+        <path d="M230 236 Q215 246 201 238" fill="none" stroke={p.dark} strokeWidth="1.6" opacity="0.6" />
+        <path d="M170 238 L184 252 M230 238 L216 252" stroke={p.dark} strokeWidth="1" opacity="0.5" />
+        <rect x="163" y="316" width="30" height="16" fill={p.base} stroke={p.dark} strokeWidth="1" opacity="0.85" />
+        <rect x="207" y="316" width="30" height="16" fill={p.base} stroke={p.dark} strokeWidth="1" opacity="0.85" />
+        <path d="M167 322 H189 M211 322 H233" stroke="#ffffff55" strokeWidth="1.2" />
+      </>
+    );
+  }
+  if (cat === "chaqueta") {
+    if (marca === "Polo Ralph Lauren") {
+      return (
+        <>
+          <path d="M148 118 L196 128 L196 200 L170 128 Z" fill={p.base} stroke={p.dark} strokeWidth="1.4" />
+          <path d="M252 118 L204 128 L204 200 L230 128 Z" fill={p.base} stroke={p.dark} strokeWidth="1.4" />
+          <path d="M196 128 L196 322" stroke={p.dark} strokeWidth="2" />
+          <circle cx="192" cy="176" r="4" fill="#b08d3e" stroke="#6b5320" />
+          <circle cx="192" cy="216" r="4" fill="#b08d3e" stroke="#6b5320" />
+          <path d="M162 250 L184 258 M238 250 L216 258" stroke={p.dark} strokeWidth="1.6" opacity="0.7" />
+          <rect x="154" y="306" width="42" height="16" fill={p.dark} opacity="0.8" />
+          <rect x="204" y="306" width="42" height="16" fill={p.dark} opacity="0.8" />
+          <path d="M158 311 H192 M208 311 H242" stroke="#ffffff44" strokeWidth="1.2" />
+        </>
+      );
+    }
+    if (CREWS.includes(marca)) {
+      return (
+        <>
+          <path d="M148 118 L196 128 L204 128 L252 118 L262 132 L222 152 L200 144 L178 152 L138 132 Z" fill={p.base} stroke={p.dark} strokeWidth="1.4" />
+          <ellipse cx="200" cy="130" rx="26" ry="10" fill={p.dark} />
+          <ellipse cx="200" cy="129" rx="20" ry="7" fill={p.base} opacity="0.55" />
+          <path d="M148 300 H196 M204 300 H252" stroke={p.dark} strokeWidth="8" strokeLinecap="round" opacity="0.85" />
+          <path d="M152 303 H192 M208 303 H248" stroke="#ffffff44" strokeWidth="1.4" />
+          <path d="M140 168 q-6 40 -2 84 M260 168 q6 40 2 84" fill="none" stroke={p.dark} strokeWidth="1.4" opacity="0.6" />
+        </>
+      );
+    }
+    return (
+      <>
+        <rect x="197" y="126" width="6" height="198" rx="2" fill={p.dark} />
+        <path d="M200 150 l0 14 m0 10 l0 14" stroke="#9aa3ad" strokeWidth="2.4" strokeDasharray="3 3" />
+        <rect x="195" y="196" width="10" height="18" rx="3" fill="#9aa3ad" stroke="#5c646d" strokeWidth="1" />
+        <path d="M148 118 L196 128 L204 128 L252 118 L262 132 L222 150 L200 142 L178 150 L138 132 Z" fill={p.base} stroke={p.dark} strokeWidth="1.4" />
+        <path d="M162 252 L186 262 M238 252 L214 262" stroke={p.dark} strokeWidth="1.6" opacity="0.7" />
+        <rect x="154" y="306" width="42" height="16" fill={p.dark} opacity="0.8" />
+        <rect x="204" y="306" width="42" height="16" fill={p.dark} opacity="0.8" />
+      </>
+    );
+  }
+  const esPolo = POLOS.includes(marca);
+  return (
+    <>
+      <ellipse cx="200" cy="123" rx="27" ry="10" fill={p.dark} />
+      <ellipse cx="200" cy="122" rx="21" ry="7" fill="#0f172a" opacity="0.35" />
+      <path d="M173 120 a27 10 0 0 1 54 0" fill="none" stroke="#ffffff66" strokeWidth="1.4" strokeDasharray="2.5 2.5" />
+      {esPolo ? (
+        <>
+          <path d="M186 128 L200 142 L214 128 L206 124 L200 130 L194 124 Z" fill={p.light} stroke={p.dark} strokeWidth="1" />
+          <rect x="195" y="138" width="10" height="34" rx="2" fill={p.base} stroke={p.dark} strokeWidth="1" />
+          <circle cx="200" cy="148" r="2.6" fill="#b08d3e" stroke="#6b5320" strokeWidth="0.6" />
+          <circle cx="200" cy="160" r="2.6" fill="#b08d3e" stroke="#6b5320" strokeWidth="0.6" />
+          <path d="M150 132 L118 145" stroke="#ffffff44" strokeWidth="1.2" />
+          <path d="M250 132 L282 145" stroke="#ffffff44" strokeWidth="1.2" />
+        </>
+      ) : (
+        <path d="M136 176 L127 192" stroke={p.dark} strokeWidth="1.4" opacity="0.6" />
+      )}
+      <path d="M136 290 Q200 301 264 290" fill="none" stroke={p.dark} strokeWidth="1.4" opacity="0.55" />
+      <path d="M143 168 q-3 50 1 96 M257 168 q3 50 -1 96" fill="none" stroke={p.dark} strokeWidth="1.2" opacity="0.45" />
+      <rect x="188" y="112" width="24" height="7" rx="2" fill="#f4f1e6" stroke={p.dark} strokeWidth="0.6" />
+    </>
+  );
+}
+
 export default function PrendaImg({
   categoria,
   marca,
-  className = "",
+  className,
 }: {
   categoria: string;
-  marca?: string;
+  marca: string;
   className?: string;
 }) {
-  const u = `${marca ?? "x"}-${categoria}`.replace(/[^a-z0-9]/gi, "");
+  const raw = useId();
+  const u = raw.replace(/[^a-zA-Z0-9]/g, "");
   const p = paleta(marca);
-  const b = marca ? BRANDS[marca] : undefined;
-  const stitch = "#c7d4e8";
-
-  const silueta =
-    categoria === "pantalon"
-      ? JEANS
-      : categoria === "chaqueta" || categoria === "camiseta"
-        ? TEE
-        : null;
+  const b = BRANDS[marca];
+  const D = outline(categoria);
 
   return (
-    <svg viewBox="0 0 400 400" className={className} role="img" aria-label={`${marca ?? ""} ${categoria}`}>
+    <svg viewBox="0 0 400 400" className={className} role="img" aria-label={`${marca} ${categoria}`}>
       <defs>
-        <radialGradient id={`bg-${u}`} cx="38%" cy="28%" r="95%">
-          <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="70%" stopColor="#eef1f5" />
-          <stop offset="100%" stopColor="#dde2e9" />
+        <linearGradient id={`bg-${u}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#fbfcfe" />
+          <stop offset="72%" stopColor="#eef1f6" />
+          <stop offset="100%" stopColor="#dde2ea" />
+        </linearGradient>
+        <radialGradient id={`key-${u}`} cx="32%" cy="20%" r="80%">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+          <stop offset="55%" stopColor="#ffffff" stopOpacity="0" />
         </radialGradient>
-        <radialGradient id={`v-${u}`} cx="50%" cy="45%" r="72%">
-          <stop offset="60%" stopColor="#0f172a" stopOpacity="0" />
-          <stop offset="100%" stopColor="#0f172a" stopOpacity="0.13" />
-        </radialGradient>
+        <linearGradient id={`base-${u}`} x1="0.15" y1="0" x2="0.85" y2="1">
+          <stop offset="0%" stopColor={p.light} />
+          <stop offset="52%" stopColor={p.base} />
+          <stop offset="100%" stopColor={p.dark} />
+        </linearGradient>
         <linearGradient id={`brillo-${u}`} x1="0" y1="0" x2="0.7" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.30" />
-          <stop offset="45%" stopColor="#ffffff" stopOpacity="0.06" />
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.32" />
+          <stop offset="45%" stopColor="#ffffff" stopOpacity="0.07" />
           <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
         </linearGradient>
+        <filter id={`n-${u}`}>
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="t" />
+          <feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.05 0" />
+          <feComposite operator="over" in2="SourceGraphic" />
+        </filter>
         <pattern id={`tela-${u}`} width="6" height="6" patternUnits="userSpaceOnUse">
           <path d="M0 3 H6 M3 0 V6" stroke="#000000" strokeWidth="0.4" opacity="0.10" />
         </pattern>
         <pattern id={`twill-${u}`} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="8" height="8" fill="transparent" />
-          <line x1="0" y1="0" x2="0" y2="8" stroke="#ffffff" strokeWidth="1.6" opacity="0.08" />
-          <line x1="3" y1="0" x2="3" y2="8" stroke="#000000" strokeWidth="1.2" opacity="0.12" />
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#ffffff" strokeWidth="1.6" opacity="0.09" />
+          <line x1="3" y1="0" x2="3" y2="8" stroke="#000000" strokeWidth="1.2" opacity="0.13" />
         </pattern>
         <pattern id={`knit-${u}`} width="10" height="7" patternUnits="userSpaceOnUse">
           <path d="M0 5 L2.5 2 L5 5 L7.5 2 L10 5" fill="none" stroke="#000000" strokeWidth="1.1" opacity="0.13" />
           <path d="M0 6.5 L2.5 3.5 L5 6.5 L7.5 3.5 L10 6.5" fill="none" stroke="#ffffff" strokeWidth="0.9" opacity="0.10" />
         </pattern>
-        <linearGradient id={`g-${u}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={p.light} />
-          <stop offset="55%" stopColor={p.base} />
-          <stop offset="100%" stopColor={p.dark} />
-        </linearGradient>
-        {silueta && (
-          <>
-            <clipPath id={`c-${u}`}>
-              <path d={silueta} />
-            </clipPath>
-            <filter id={`n-${u}`}>
-              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" />
-              <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.055 0" />
-            </filter>
-          </>
-        )}
+        <clipPath id={`c-${u}`}>
+          <path d={D} />
+        </clipPath>
+        <clipPath id={`floor-${u}`}>
+          <rect x="0" y="360" width="400" height="40" />
+        </clipPath>
       </defs>
 
       <rect width="400" height="400" fill={`url(#bg-${u})`} />
-      <line x1="0" y1="338" x2="400" y2="338" stroke="#c9cfda" strokeWidth="2" opacity="0.7" />
-      <ellipse cx="200" cy="354" rx="130" ry="17" fill="#0f172a" opacity="0.07" />
-      <ellipse cx="200" cy="352" rx="88" ry="11" fill="#0f172a" opacity="0.13" />
+      <rect width="400" height="400" fill={`url(#key-${u})`} />
+      <line x1="0" y1="358" x2="400" y2="358" stroke="#cbd2dc" strokeWidth="2" />
 
-      {/* PERCHA DE MADERA */}
-      {(categoria === "camiseta" || categoria === "chaqueta") && (
-        <g>
-          <path d="M200 16 q11 1 11 11 t-11 10 v9" fill="none" stroke="#8a5a2b" strokeWidth="5" strokeLinecap="round" />
-          <path d="M206 18 q6 2 5 8" fill="none" stroke="#ffffff88" strokeWidth="1.6" strokeLinecap="round" />
-          <path d="M92 98 L200 54 L308 98" fill="none" stroke="#a06a33" strokeWidth="9" strokeLinecap="round" />
-          <path d="M92 98 L200 54 L308 98" fill="none" stroke="#c68b4d" strokeWidth="4" strokeLinecap="round" />
-          <path d="M96 96 L198 54" fill="none" stroke="#8a5a2b" strokeWidth="1.4" opacity="0.6" />
-        </g>
-      )}
-      {categoria === "pantalon" && (
-        <g>
-          <path d="M200 20 q11 1 11 11 t-11 10 v13" fill="none" stroke="#8a5a2b" strokeWidth="5" strokeLinecap="round" />
-          <rect x="140" y="46" width="120" height="9" rx="4.5" fill="#a06a33" />
-          <rect x="128" y="52" width="15" height="26" rx="4" fill="#8a5a2b" />
-          <rect x="257" y="52" width="15" height="26" rx="4" fill="#8a5a2b" />
-        </g>
-      )}
+      {/* PERCHA */}
+      <g>
+        <path d="M200 16 q11 1 11 11 t-11 10 v9" fill="none" stroke="#8a5a2b" strokeWidth="5" strokeLinecap="round" />
+        <path d="M206 18 q6 2 5 8" fill="none" stroke="#ffffff88" strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M92 98 L200 54 L308 98" fill="none" stroke="#a06a33" strokeWidth="9" strokeLinecap="round" />
+        <path d="M92 98 L200 54 L308 98" fill="none" stroke="#c68b4d" strokeWidth="4" strokeLinecap="round" />
+        <path d="M96 96 L198 54" fill="none" stroke="#8a5a2b" strokeWidth="1.4" opacity="0.6" />
+      </g>
 
-      {/* CAMISETA / POLO / CAMISA */}
-      {(categoria === "camiseta" || categoria === "") && (
-        <g>
-          <path d={TEE} fill={`url(#g-${u})`} stroke="#00000022" />
-          {marca === "Tommy Hilfiger" ? (
-            <>
-              <path d="M150 76 Q200 104 250 76 L242 62 Q200 86 158 62 Z" fill={p.dark} />
-              <rect x="188" y="100" width="24" height="58" rx="3" fill={p.light} stroke="#00000033" />
-              {[112, 130, 148].map((cy) => (
-                <circle key={cy} cx="200" cy={cy} r="3" fill="#ffffff" opacity="0.9" />
-              ))}
-              <rect x="250" y="142" width="36" height="25" fill="#14213d" stroke="#ffffff55" />
-              <rect x="268" y="146" width="16" height="7" fill="#ffffff" />
-              <rect x="268" y="155" width="16" height="7" fill="#d62828" />
-            </>
-          ) : marca === "Calvin Klein" ? (
-            <>
-              <path d="M168 74 L232 74 L218 102 Q200 112 182 102 Z" fill={p.light} stroke="#00000033" />
-              <line x1="182" y1="102" x2="176" y2="128" stroke="#ffffff44" strokeWidth="1.5" />
-              <text x="200" y="215" textAnchor="middle" fontSize="13" fontWeight="700" letterSpacing="3" fill="#ffffff" fontFamily="Arial">
-                CALVIN KLEIN
-              </text>
-            </>
-          ) : (
-            <>
-              <path d="M150 76 Q200 102 250 76 L243 65 Q200 88 157 65 Z" fill={p.dark} />
-              <circle cx="200" cy="190" r="37" fill="none" stroke="#55654e" strokeWidth="3" />
-              <path d="M178 183 q11 -14 22 0 q11 -14 22 0" fill="none" stroke="#55654e" strokeWidth="3" strokeLinecap="round" />
-              <text x="200" y="228" textAnchor="middle" fontSize="16" fontWeight="800" letterSpacing="5" fill="#55654e" fontFamily="Arial">HCO</text>
-            </>
-          )}
-          <path d="M126 168 q-8 46 0 92" stroke="#000" opacity="0.14" fill="none" strokeWidth="3" />
-          <path d="M274 168 q8 46 0 92" stroke="#000" opacity="0.14" fill="none" strokeWidth="3" />
-          <path d="M114 324 Q200 337 286 324" stroke="#000" opacity="0.20" fill="none" strokeWidth="2" />
-        </g>
-      )}
+      {/* SOMBRA EN PISO */}
+      <ellipse cx="200" cy="366" rx="120" ry="12" fill="#0f172a" opacity="0.08" />
+      <ellipse cx="200" cy="364" rx="82" ry="8" fill="#0f172a" opacity="0.14" />
 
-      {/* PANTALON / JEANS / SHORT / JOGGER */}
-      {categoria === "pantalon" && (
-        <g>
-          <path d={JEANS} fill={`url(#g-${u})`} stroke="#00000022" />
-          <rect x="124" y="72" width="152" height="26" rx="5" fill={p.dark} stroke="#00000033" />
-          {[136, 167, 198, 229, 260].map((x) => (
-            <rect key={x} x={x} y="67" width="7" height="15" rx="2" fill={p.dark} stroke="#00000022" />
-          ))}
-          <circle cx="198" cy="85" r="3.2" fill="#d7dde6" />
-          <path d="M199 98 Q190 132 197 158" stroke={stitch} strokeWidth="1.8" strokeDasharray="6 4" fill="none" />
-          <path d="M138 104 Q164 132 188 106" stroke={stitch} strokeWidth="1.8" strokeDasharray="6 4" fill="none" />
-          <path d="M212 106 Q236 132 262 104" stroke={stitch} strokeWidth="1.8" strokeDasharray="6 4" fill="none" />
-          <path d="M124 98 L276 98" stroke={stitch} strokeWidth="1.8" strokeDasharray="6 4" opacity="0.8" />
-          <path d="M148 170 q-6 40 -4 78" stroke="#000" opacity="0.15" fill="none" strokeWidth="3" />
-          <path d="M252 170 q6 40 4 78" stroke="#000" opacity="0.15" fill="none" strokeWidth="3" />
-          {marca === "Tommy Hilfiger" && (
-            <g>
-              <rect x="246" y="76" width="34" height="18" rx="3" fill="#b98a4e" stroke="#7a5a2e" />
-              <rect x="250" y="80" width="26" height="4" fill="#14213d" />
-              <rect x="250" y="86" width="26" height="3" fill="#d62828" />
-            </g>
-          )}
-          {marca === "Calvin Klein" && (
-            <text x="152" y="200" fontSize="9" fontWeight="700" letterSpacing="1.5" fill="#ffffffcc" fontFamily="Arial">CALVIN KLEIN</text>
-          )}
-        </g>
-      )}
+      {/* REFLEJO ESPEJO */}
+      <g clipPath={`url(#floor-${u})`} opacity="0.07" transform="translate(0 720) scale(1 -1)">
+        <path d={D} fill={p.dark} />
+      </g>
 
-      {/* CHAQUETA: sudadera / zip / rompevientos */}
-      {categoria === "chaqueta" && (
-        <g>
-          {marca === "Tommy Hilfiger" ? (
-            <>
-              <path d="M118 80 L86 98 L58 154 L96 174 L118 148 Z" fill="#16294a" />
-              <path d="M282 80 L314 98 L342 154 L304 174 L282 148 Z" fill="#16294a" />
-              <path d={TEE} fill="#eceff3" stroke="#00000022" />
-              <rect x="118" y="150" width="164" height="14" fill="#d62828" clipPath={`url(#c-${u})`} />
-              <rect x="170" y="62" width="60" height="20" rx="8" fill="#16294a" />
-              <line x1="198" y1="86" x2="198" y2="330" stroke="#94a3b8" strokeWidth="3" />
-              <line x1="203" y1="86" x2="203" y2="330" stroke="#64748b" strokeWidth="1.5" />
-              <rect x="114" y="318" width="172" height="15" rx="4" fill="#16294a" />
-            </>
-          ) : marca === "Hollister" ? (
-            <>
-              <path d="M136 86 Q200 40 264 86 L264 118 Q200 84 136 118 Z" fill={p.dark} />
-              <path d={TEE} fill={`url(#g-${u})`} stroke="#00000022" />
-              <path d="M192 110 q-3 26 0 46" stroke="#f1f3f5" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-              <path d="M208 110 q3 26 0 46" stroke="#f1f3f5" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-              <circle cx="192" cy="158" r="2.5" fill="#e2e5ea" />
-              <circle cx="208" cy="158" r="2.5" fill="#e2e5ea" />
-              <path d="M152 252 L248 252 L260 310 L140 310 Z" fill="none" stroke="#00000044" strokeWidth="2.5" strokeDasharray="7 4" />
-              <text x="200" y="205" textAnchor="middle" fontSize="14" fontWeight="800" letterSpacing="4" fill="#55654e" fontFamily="Arial">HCO</text>
-              <rect x="114" y="320" width="172" height="14" rx="4" fill={p.dark} />
-            </>
-          ) : (
-            <>
-              <rect x="170" y="64" width="60" height="20" rx="9" fill={p.light} stroke="#00000033" />
-              <path d={TEE} fill={`url(#g-${u})`} stroke="#00000022" />
-              <line x1="200" y1="86" x2="200" y2="330" stroke="#c7ccd6" strokeWidth="3" />
-              <rect x="195" y="116" width="10" height="16" rx="3" fill="#9aa0aa" />
-              <text x="158" y="150" fontSize="11" fontWeight="700" letterSpacing="2" fill="#ffffffaa" fontFamily="Arial">CK</text>
-              <rect x="114" y="320" width="172" height="14" rx="4" fill={p.dark} />
-            </>
-          )}
-        </g>
-      )}
+      {/* PRENDA */}
+      <path d={D} fill={`url(#base-${u})`} stroke={p.dark} strokeWidth="2" strokeLinejoin="round" />
+      <Detalles cat={categoria} marca={marca} p={p} />
 
-      {/* GORRA */}
-      {categoria === "gorra" && (
-        <g>
-          <path d="M118 196 Q126 108 200 104 Q274 108 282 196 Q284 208 272 210 Q236 186 200 186 Q164 186 128 210 Q116 208 118 196 Z" fill={`url(#g-${u})`} stroke="#00000022" />
-          <path d="M200 106 L200 184" stroke="#00000033" strokeWidth="2" />
-          <circle cx="200" cy="102" r="6" fill={p.dark} stroke="#ffffff44" />
-          <path d="M148 214 Q200 248 262 212 Q268 222 254 230 Q198 256 142 228 Z" fill={p.dark} stroke="#00000033" />
-          <path d="M132 206 Q166 190 200 190" stroke="#ffffff55" strokeWidth="1.5" fill="none" />
-          {marca === "Nike" && (
-            <path d="M158 158 q34 14 84 -12 q-40 30 -78 20 Z" fill="#ffffff" opacity="0.92" />
-          )}
-          {marca === "Polo Ralph Lauren" && (
-            <>
-              <circle cx="200" cy="150" r="16" fill="#0a1f44" stroke="#ffffff88" strokeWidth="2" />
-              <text x="200" y="157" textAnchor="middle" fontSize="18" fill="#ffffff" fontFamily="Georgia">🐎</text>
-            </>
-          )}
-        </g>
+      {/* TEXTURAS Y LUZ */}
+      {categoria === "pantalon" && <rect width="400" height="400" fill={`url(#twill-${u})`} clipPath={`url(#c-${u})`} />}
+      {(categoria === "chaqueta" || POLOS.includes(marca)) && (
+        <rect width="400" height="400" fill={`url(#knit-${u})`} clipPath={`url(#c-${u})`} />
       )}
-
-      {/* LEGADO: vestido / blusa / zapatos */}
-      {(categoria === "vestido" || categoria === "blusa" || categoria === "zapatos") && (
-        <g transform="scale(2)">
-          <g fill={p.base}>
-            {categoria === "vestido" && (
-              <>
-                <path d="M41 16 L59 16 L57 40 L71 84 L29 84 L43 40 Z" />
-                <rect x="41" y="13" width="18" height="6" rx="2.5" fill={p.dark} />
-              </>
-            )}
-            {categoria === "blusa" && (
-              <path d="M32 21 L20 29 L11 48 L24 55 L28 47 L28 79 L72 79 L72 47 L76 55 L89 48 L80 29 L68 21 L50 37 Z" />
-            )}
-            {categoria === "zapatos" && (
-              <>
-                <path d="M14 66 Q14 50 34 49 Q59 48 74 41 Q88 35 90 52 L90 69 Q90 75 83 75 L21 75 Q14 75 14 70 Z" />
-                <path d="M14 68 L90 68 L90 73 Q90 76 84 76 L20 76 Q14 76 14 72 Z" fill={p.dark} />
-              </>
-            )}
-          </g>
-        </g>
+      {(categoria === "camiseta" || categoria === "gorra") && (
+        <rect width="400" height="400" fill={`url(#tela-${u})`} clipPath={`url(#c-${u})`} />
       )}
-
-      {silueta && (
-        <>
-          <rect width="400" height="400" filter={`url(#n-${u})`} clipPath={`url(#c-${u})`} />
-          {categoria === "pantalon" && (
-            <rect width="400" height="400" fill={`url(#twill-${u})`} clipPath={`url(#c-${u})`} />
-          )}
-          {(categoria === "chaqueta" || marca === "Nautica") && (
-            <rect width="400" height="400" fill={`url(#knit-${u})`} clipPath={`url(#c-${u})`} />
-          )}
-          {(categoria === "camiseta" || categoria === "") && (
-            <rect width="400" height="400" fill={`url(#tela-${u})`} clipPath={`url(#c-${u})`} />
-          )}
-          <rect width="400" height="400" fill={`url(#brillo-${u})`} clipPath={`url(#c-${u})`} />
-        </>
-      )}
+      <rect width="400" height="400" filter={`url(#n-${u})`} clipPath={`url(#c-${u})`} />
+      <rect width="400" height="400" fill={`url(#brillo-${u})`} clipPath={`url(#c-${u})`} />
 
       {/* ETIQUETA DE PRECIO COLGANTE */}
-      {silueta && (
-        <g transform="rotate(14 300 170)">
-          <line x1="288" y1="128" x2="304" y2="158" stroke="#9a7b4f" strokeWidth="1.6" />
-          <rect x="290" y="156" width="38" height="24" rx="3" fill="#fdf6e3" stroke="#d4c9a8" />
-          <circle cx="296" cy="162" r="2.2" fill="#b3a37e" />
-          <line x1="302" y1="168" x2="322" y2="168" stroke="#b23b3b" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="302" y1="173" x2="315" y2="173" stroke="#8a8a8a" strokeWidth="1.6" strokeLinecap="round" />
+      <g transform="rotate(14 300 170)">
+        <line x1="288" y1="128" x2="304" y2="158" stroke="#9a7b4f" strokeWidth="1.6" />
+        <rect x="290" y="156" width="38" height="24" rx="3" fill="#fdf6e3" stroke="#d4c9a8" />
+        <circle cx="296" cy="162" r="2.2" fill="#b3a37e" />
+        <line x1="302" y1="168" x2="322" y2="168" stroke="#b23b3b" strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="302" y1="173" x2="315" y2="173" stroke="#8a8a8a" strokeWidth="1.6" strokeLinecap="round" />
+      </g>
+
+      {/* PARCHE DE MARCA COSIDO */}
+      {b && categoria !== "gorra" && (
+        <g>
+          <rect x="236" y="278" width="30" height="14" rx="2" fill="#f4f1e6" stroke="#c9be9c" strokeWidth="0.8" />
+          <path d="M238 280 v10 M264 280 v10" stroke={p.dark} strokeWidth="0.8" strokeDasharray="1.5 1.5" />
+          <text x="251" y="288" fontSize="7" fontWeight="800" fill={p.dark} textAnchor="middle" fontFamily="Arial, sans-serif">
+            {b.label.slice(0, 6)}
+          </text>
         </g>
       )}
-      <rect width="400" height="400" fill={`url(#v-${u})`} />
 
+      {/* INSIGNIA DE MARCA */}
       {b && (
         <g>
           <rect
