@@ -10,6 +10,18 @@ export function precioFinal(precio: number): number {
 
 export const WHATSAPP_TIENDA = "593999999999";
 
+export const ASESORIA_IMAGEN = {
+  titulo: "Asesoría de Imagen Personal",
+  precio: 15,
+  gratisDesde: 150,
+  incluye: [
+    "Evaluación de tu estilo y tipo de cuerpo",
+    "Paleta de colores según tu tono de piel",
+    "Combinación de prendas para cada ocasión",
+    "Guía de tallas perfectas para ti",
+  ],
+};
+
 export const COSTO_ENVIO = 3.5;
 export const ENVIO_GRATIS_DESDE = 40;
 

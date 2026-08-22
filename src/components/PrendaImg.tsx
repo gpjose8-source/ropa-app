@@ -105,6 +105,15 @@ export default function PrendaImg({
         <pattern id={`tela-${u}`} width="6" height="6" patternUnits="userSpaceOnUse">
           <path d="M0 3 H6 M3 0 V6" stroke="#000000" strokeWidth="0.4" opacity="0.10" />
         </pattern>
+        <pattern id={`twill-${u}`} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="8" height="8" fill="transparent" />
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#ffffff" strokeWidth="1.6" opacity="0.08" />
+          <line x1="3" y1="0" x2="3" y2="8" stroke="#000000" strokeWidth="1.2" opacity="0.12" />
+        </pattern>
+        <pattern id={`knit-${u}`} width="10" height="7" patternUnits="userSpaceOnUse">
+          <path d="M0 5 L2.5 2 L5 5 L7.5 2 L10 5" fill="none" stroke="#000000" strokeWidth="1.1" opacity="0.13" />
+          <path d="M0 6.5 L2.5 3.5 L5 6.5 L7.5 3.5 L10 6.5" fill="none" stroke="#ffffff" strokeWidth="0.9" opacity="0.10" />
+        </pattern>
         <linearGradient id={`g-${u}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={p.light} />
           <stop offset="55%" stopColor={p.base} />
@@ -124,14 +133,18 @@ export default function PrendaImg({
       </defs>
 
       <rect width="400" height="400" fill={`url(#bg-${u})`} />
-      <ellipse cx="200" cy="354" rx="120" ry="15" fill="#0f172a" opacity="0.10" />
+      <line x1="0" y1="338" x2="400" y2="338" stroke="#c9cfda" strokeWidth="2" opacity="0.7" />
+      <ellipse cx="200" cy="354" rx="130" ry="17" fill="#0f172a" opacity="0.07" />
+      <ellipse cx="200" cy="352" rx="88" ry="11" fill="#0f172a" opacity="0.13" />
 
       {/* PERCHA DE MADERA */}
       {(categoria === "camiseta" || categoria === "chaqueta") && (
         <g>
           <path d="M200 16 q11 1 11 11 t-11 10 v9" fill="none" stroke="#8a5a2b" strokeWidth="5" strokeLinecap="round" />
+          <path d="M206 18 q6 2 5 8" fill="none" stroke="#ffffff88" strokeWidth="1.6" strokeLinecap="round" />
           <path d="M92 98 L200 54 L308 98" fill="none" stroke="#a06a33" strokeWidth="9" strokeLinecap="round" />
           <path d="M92 98 L200 54 L308 98" fill="none" stroke="#c68b4d" strokeWidth="4" strokeLinecap="round" />
+          <path d="M96 96 L198 54" fill="none" stroke="#8a5a2b" strokeWidth="1.4" opacity="0.6" />
         </g>
       )}
       {categoria === "pantalon" && (
@@ -293,7 +306,15 @@ export default function PrendaImg({
       {silueta && (
         <>
           <rect width="400" height="400" filter={`url(#n-${u})`} clipPath={`url(#c-${u})`} />
-          <rect width="400" height="400" fill={`url(#tela-${u})`} clipPath={`url(#c-${u})`} />
+          {categoria === "pantalon" && (
+            <rect width="400" height="400" fill={`url(#twill-${u})`} clipPath={`url(#c-${u})`} />
+          )}
+          {(categoria === "chaqueta" || marca === "Nautica") && (
+            <rect width="400" height="400" fill={`url(#knit-${u})`} clipPath={`url(#c-${u})`} />
+          )}
+          {(categoria === "camiseta" || categoria === "") && (
+            <rect width="400" height="400" fill={`url(#tela-${u})`} clipPath={`url(#c-${u})`} />
+          )}
           <rect width="400" height="400" fill={`url(#brillo-${u})`} clipPath={`url(#c-${u})`} />
         </>
       )}

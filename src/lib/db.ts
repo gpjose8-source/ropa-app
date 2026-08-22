@@ -136,6 +136,12 @@ export function db(): DatabaseSync {
         ["Sudadera A&F heritage", "chaqueta", "L", "Abercrombie & Fitch", 63.0, 149.99, 2],
         ["Polo Nautica marino", "camiseta", "M", "Nautica", 54.0, 129.99, 3],
         ["Camisa Nautica deck", "camiseta", "L", "Nautica", 59.0, 139.99, 2],
+        ["Blazer RL lana azul marino", "chaqueta", "M", "Polo Ralph Lauren", 126.0, 299.99, 2],
+        ["Abrigo camel clásico", "chaqueta", "L", "Polo Ralph Lauren", 147.0, 349.99, 2],
+        ["Suéter merino cuello V", "chaqueta", "M", "Nautica", 105.0, 249.99, 2],
+        ["Camisa de vestir CK slim negra", "camiseta", "M", "Calvin Klein", 109.0, 259.99, 2],
+        ["Chino sartorial Tommy", "pantalon", "32", "Tommy Hilfiger", 101.0, 239.99, 2],
+        ["Sudadera A&F cashmere blend", "chaqueta", "L", "Abercrombie & Fitch", 118.0, 279.99, 2],
       ];
       const ins = db().prepare(
         `INSERT INTO productos (nombre, categoria, talla, marca, estado, precio_costo, precio_venta, stock)

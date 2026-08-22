@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import PrendaImg from "@/components/PrendaImg";
 import GuiaTallas from "@/components/GuiaTallas";
 import Checkout from "./Checkout";
-import { TEMPORADA, WHATSAPP_TIENDA, precioFinal } from "@/lib/tienda";
+import { TEMPORADA, WHATSAPP_TIENDA, ASESORIA_IMAGEN, precioFinal } from "@/lib/tienda";
 
 const IG_USER = "garageclothingec";
 const IG_URL = `https://www.instagram.com/${IG_USER}/`;
@@ -109,6 +109,44 @@ export default function Catalogo({
         </div>
       </section>
 
+      {/* ASESORÍA DE IMAGEN */}
+      <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-gray-900 to-black p-[2px] shadow-2xl">
+        <div className="flex flex-col items-start gap-5 rounded-3xl p-6 sm:flex-row sm:items-center sm:p-8">
+          <span className="text-5xl">👑</span>
+          <div className="flex-1">
+            <p className="text-[11px] font-black uppercase tracking-[0.25em] text-amber-400">Servicio exclusivo</p>
+            <h2 className="text-xl font-black text-white sm:text-2xl">
+              {ASESORIA_IMAGEN.titulo} <span className="text-amber-400">GARAGE</span>
+            </h2>
+            <ul className="mt-2 grid gap-x-6 gap-y-1 text-sm text-slate-300 sm:grid-cols-2">
+              {ASESORIA_IMAGEN.incluye.map((i) => (
+                <li key={i} className="flex items-center gap-1.5">
+                  <span className="text-amber-400">✦</span> {i}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <span className="rounded-full bg-amber-400/10 px-4 py-1.5 text-center ring-1 ring-amber-400/50">
+              <span className="block text-2xl font-black text-amber-400">${ASESORIA_IMAGEN.precio}</span>
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">
+                sesión 1 a 1
+              </span>
+            </span>
+            <a
+              href={`https://wa.me/${WHATSAPP_TIENDA}?text=${encodeURIComponent("Hola! Quiero agendar una Asesoría de Imagen Personal 👑")}`}
+              target="_blank"
+              className="rounded-xl bg-gradient-to-r from-yellow-500 to-amber-400 px-5 py-2.5 text-sm font-black text-black shadow-lg transition hover:brightness-110"
+            >
+              Agendar por WhatsApp
+            </a>
+            <span className="max-w-[190px] text-center text-[10px] font-semibold text-slate-400">
+              GRATIS con compras desde ${ASESORIA_IMAGEN.gratisDesde}
+            </span>
+          </div>
+        </div>
+      </section>
+
       {/* INSTAGRAM */}
       <section>
         <h2 className="mb-4 text-xl font-black text-black">📸 Mira la ropa en acción</h2>
@@ -182,11 +220,18 @@ export default function Catalogo({
                   <span className="absolute left-2 top-2 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-black text-white shadow">
                     -{TEMPORADA.pct}%
                   </span>
-                  {p.stock <= 2 && (
-                    <span className="absolute right-2 top-2 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-black text-black shadow">
-                      ¡Últimas {p.stock}!
-                    </span>
-                  )}
+                  <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
+                    {p.precio_venta >= 200 && (
+                      <span className="rounded-full bg-gradient-to-r from-yellow-500 to-amber-400 px-2 py-0.5 text-[10px] font-black text-black shadow ring-1 ring-yellow-600/60">
+                        👑 PREMIUM
+                      </span>
+                    )}
+                    {p.stock <= 2 && (
+                      <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-red-600 shadow ring-1 ring-red-200">
+                        ¡Últimas {p.stock}!
+                      </span>
+                    )}
+                  </div>
                   <span className={`absolute bottom-2 left-2 rounded-full px-2 py-0.5 text-[10px] font-bold capitalize ring-1 ${CHIP[p.categoria] ?? "bg-gray-100 text-slate-800 ring-gray-200"}`}>
                     {p.categoria}
                   </span>
