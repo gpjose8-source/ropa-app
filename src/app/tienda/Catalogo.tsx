@@ -94,16 +94,18 @@ export default function Catalogo({
               📸 @{IG_USER}
             </a>
           </div>
-          <button onClick={() => setQrGrande(true)}
-            className="mt-6 mx-auto flex items-center gap-4 rounded-2xl bg-white p-3 shadow-xl ring-2 ring-red-200 transition hover:scale-[1.02]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={qr} alt="QR tienda" className="h-24 w-24 rounded-lg" />
-            <span className="pr-2 text-left">
-              <span className="block text-base font-black text-black">📱 Compra desde tu celular</span>
-              <span className="block text-xs text-slate-800">Escanea el QR → entra a la tienda → pide en 1 minuto</span>
-              <span className="mt-0.5 block text-[11px] font-bold text-red-600 underline">Ver código más grande</span>
-            </span>
-          </button>
+          {qr && (
+            <button onClick={() => setQrGrande(true)}
+              className="mt-6 mx-auto flex items-center gap-4 rounded-2xl bg-white p-3 shadow-xl ring-2 ring-red-200 transition hover:scale-[1.02]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={qr} alt="QR tienda" className="h-24 w-24 rounded-lg" />
+              <span className="pr-2 text-left">
+                <span className="block text-base font-black text-black">📱 Compra desde tu celular</span>
+                <span className="block text-xs text-slate-800">Escanea el QR → entra a la tienda → pide en 1 minuto</span>
+                <span className="mt-0.5 block text-[11px] font-bold text-red-600 underline">Ver código más grande</span>
+              </span>
+            </button>
+          )}
         </div>
       </section>
 

@@ -20,11 +20,14 @@ function fotoDe(id: number): string | null {
 
 export default async function TiendaPage() {
   fs.mkdirSync(DIR_FOTOS, { recursive: true });
-  const qr = await QRCode.toDataURL(URL_TIENDA, {
-    width: 420,
-    margin: 1,
-    color: { dark: "#111111", light: "#ffffff" },
-  });
+  let qr = "";
+  try {
+    qr = await QRCode.toDataURL(URL_TIENDA, {
+      width: 420,
+      margin: 1,
+      color: { dark: "#111111", light: "#ffffff" },
+    });
+  } catch {}
   const productos = listarProductos().map((p) => ({
     id: p.id,
     nombre: p.nombre,
