@@ -1,9 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
+import QRCode from "qrcode";
 import { listarProductos } from "@/lib/db";
 import Catalogo from "./Catalogo";
 
 export const dynamic = "force-dynamic";
+
+const URL_TIENDA = process.env.URL_PUBLICA_TIENDA ?? "https://ropa-app-three.vercel.app/tienda";
 
 const DIR_FOTOS = path.join(process.cwd(), "public", "img", "productos");
 
@@ -15,8 +18,13 @@ function fotoDe(id: number): string | null {
   return null;
 }
 
-export default function TiendaPage() {
+export default async function TiendaPage() {
   fs.mkdirSync(DIR_FOTOS, { recursive: true });
+  const qr = await QRCode.toDataURL(URL_TIENDA, {
+    width: 420,
+    margin: 1,
+    color: { dark: "#111111", light: "#ffffff" },
+  });
   const productos = listarProductos().map((p) => ({
     id: p.id,
     nombre: p.nombre,
@@ -27,5 +35,5 @@ export default function TiendaPage() {
     stock: p.stock,
     foto: fotoDe(p.id),
   }));
-  return <Catalogo productos={productos} />;
+  return <Catalogo productos={productos} qr={qr} urlTienda={URL_TIENDA} />;
 }

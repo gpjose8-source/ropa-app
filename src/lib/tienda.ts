@@ -10,6 +10,21 @@ export function precioFinal(precio: number): number {
 
 export const WHATSAPP_TIENDA = "593999999999";
 
+export const COSTO_ENVIO = 3.5;
+export const ENVIO_GRATIS_DESDE = 40;
+
+export const CIUDADES = [
+  "Quito", "Guayaquil", "Cuenca", "Manta", "Ambato", "Santo Domingo",
+  "Machala", "Loja", "Esmeraldas", "Riobamba", "Milagro", "Ibarra",
+  "Portoviejo", "Babahoyo", "Tulcán", "Quevedo", "Latacunga", "Nueva Loja",
+];
+
+export function fechaEntrega(): string {
+  const d = new Date();
+  d.setDate(d.getDate() + 3);
+  return d.toLocaleDateString("es-EC", { weekday: "long", day: "numeric", month: "long" });
+}
+
 export const CUENTA_BANCARIA = {
   banco: "Banco Pichincha",
   tipo: "Ahorros",

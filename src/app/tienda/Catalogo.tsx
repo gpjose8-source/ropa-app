@@ -43,13 +43,22 @@ function wa(p: Prod, texto?: string): string {
   return `https://wa.me/${WHATSAPP_TIENDA}?text=${encodeURIComponent(msg)}`;
 }
 
-export default function Catalogo({ productos }: { productos: Prod[] }) {
+export default function Catalogo({
+  productos,
+  qr,
+  urlTienda,
+}: {
+  productos: Prod[];
+  qr: string;
+  urlTienda: string;
+}) {
   const [cat, setCat] = useState("todas");
   const [talla, setTalla] = useState("todas");
   const [q, setQ] = useState("");
   const [sel, setSel] = useState<Prod | null>(null);
   const [compra, setCompra] = useState<Prod | null>(null);
   const [guia, setGuia] = useState<string | null>(null);
+  const [qrGrande, setQrGrande] = useState(false);
 
   const cats = useMemo(() => Array.from(new Set(productos.map((p) => p.categoria))), [productos]);
   const tallas = useMemo(() => Array.from(new Set(productos.map((p) => p.talla))), [productos]);
@@ -85,6 +94,16 @@ export default function Catalogo({ productos }: { productos: Prod[] }) {
               📸 @{IG_USER}
             </a>
           </div>
+          <button onClick={() => setQrGrande(true)}
+            className="mt-6 mx-auto flex items-center gap-4 rounded-2xl bg-white p-3 shadow-xl ring-2 ring-red-200 transition hover:scale-[1.02]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={qr} alt="QR tienda" className="h-24 w-24 rounded-lg" />
+            <span className="pr-2 text-left">
+              <span className="block text-base font-black text-black">📱 Compra desde tu celular</span>
+              <span className="block text-xs text-slate-800">Escanea el QR → entra a la tienda → pide en 1 minuto</span>
+              <span className="mt-0.5 block text-[11px] font-bold text-red-600 underline">Ver código más grande</span>
+            </span>
+          </button>
         </div>
       </section>
 
@@ -265,6 +284,24 @@ export default function Catalogo({ productos }: { productos: Prod[] }) {
 
       {compra && <Checkout producto={compra} onClose={() => setCompra(null)} />}
       {guia && <GuiaTallas categoria={guia} onClose={() => setGuia(null)} />}
+
+      {qrGrande && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setQrGrande(false)}>
+          <div className="max-w-sm rounded-3xl bg-white p-8 text-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-2xl font-black text-black">📱 Escanea y compra</h3>
+            <p className="mt-1 text-sm text-slate-800">Apunta la cámara de tu celular al código:</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={qr} alt="QR de la tienda" className="mx-auto mt-4 w-64 rounded-2xl ring-4 ring-red-500" />
+            <p className="mt-4 break-all rounded-xl bg-gray-100 px-3 py-2 text-xs font-bold text-slate-800">{urlTienda}</p>
+            <p className="mt-3 text-xs text-slate-800">
+              Perfecto para ponerlo en el vidrio de la tienda física, volantes o publicaciones 🖨️
+            </p>
+            <button onClick={() => setQrGrande(false)} className="mt-4 w-full rounded-xl bg-black py-2.5 font-bold text-white hover:bg-slate-800">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

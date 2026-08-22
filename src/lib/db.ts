@@ -76,15 +76,30 @@ CREATE TABLE IF NOT EXISTS pedidos (
   talla TEXT,
   total REAL NOT NULL,
   metodo TEXT NOT NULL,
+  envio TEXT DEFAULT 'recoger',
+  ciudad TEXT DEFAULT '',
+  direccion TEXT DEFAULT '',
   estado TEXT DEFAULT 'pendiente',
   creado_en TEXT DEFAULT (datetime('now','localtime'))
 );
 `;
 
+
 export function db(): DatabaseSync {
   if (!_db) {
     _db = new DatabaseSync(DB_PATH);
     _db.exec(SCHEMA);
+    const colsPedidos = _db.prepare("PRAGMA table_info(pedidos)").all() as {
+      name: string;
+    }[];
+    const tiene = (n: string) => colsPedidos.some((c) => c.name === n);
+    if (!tiene("envio"))
+      _db.exec("ALTER TABLE pedidos ADD COLUMN envio TEXT DEFAULT 'recoger'");
+    if (!tiene("ciudad"))
+      _db.exec("ALTER TABLE pedidos ADD COLUMN ciudad TEXT DEFAULT ''");
+    if (!tiene("direccion"))
+      _db.exec("ALTER TABLE pedidos ADD COLUMN direccion TEXT DEFAULT ''");
+
     const n = one<{ c: number }>("SELECT COUNT(*) c FROM productos");
     if ((n?.c ?? 0) === 0) {
       const demo: [string, string, string, string, number, number, number][] = [
