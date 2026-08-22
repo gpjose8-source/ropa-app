@@ -73,6 +73,30 @@ export function db(): DatabaseSync {
   if (!_db) {
     _db = new DatabaseSync(DB_PATH);
     _db.exec(SCHEMA);
+    const n = one<{ c: number }>("SELECT COUNT(*) c FROM productos");
+    if ((n?.c ?? 0) === 0) {
+      const demo: [string, string, string, string, number, number, number][] = [
+        ["Camiseta básica algodón premium", "camiseta", "M", "American Eagle", 2.5, 6.5, 4],
+        ["Camiseta estampada retro", "camiseta", "L", "Hollister", 3.0, 7.5, 3],
+        ["Camiseta deportiva dry-fit", "camiseta", "S", "Nike", 3.5, 8.0, 5],
+        ["Jeans recto clásico", "pantalon", "32", "Levis", 5.0, 12.0, 3],
+        ["Jean skinny moderno", "pantalon", "28", "Zara", 4.5, 11.0, 2],
+        ["Pantalón cargo urbano", "pantalon", "34", "HM", 5.5, 13.0, 4],
+        ["Chaqueta jean vintage", "chaqueta", "M", "Wrangler", 7.0, 15.0, 2],
+        ["Chaqueta impermeable", "chaqueta", "L", "Columbia", 6.5, 14.0, 3],
+        ["Vestido floral verano", "vestido", "S", "Forever21", 4.0, 9.5, 3],
+        ["Vestido lino elegante", "vestido", "M", "Mango", 4.5, 10.5, 2],
+        ["Blusa bordada artesanal", "blusa", "M", "Artesanal", 3.0, 7.5, 4],
+        ["Blusa satén noche", "blusa", "P", "Bershka", 3.5, 8.0, 2],
+        ["Zapatillas urbanas", "zapatos", "41", "Adidas", 6.0, 14.0, 2],
+        ["Sandalias verano", "zapatos", "38", "Rack", 4.0, 9.0, 3],
+      ];
+      const ins = db().prepare(
+        `INSERT INTO productos (nombre, categoria, talla, marca, estado, precio_costo, precio_venta, stock)
+         VALUES (?, ?, ?, ?, 'A', ?, ?, ?)`
+      );
+      for (const d of demo) ins.run(...d);
+    }
   }
   return _db;
 }

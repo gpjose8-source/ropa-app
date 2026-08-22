@@ -111,6 +111,42 @@ function base(progresion, bpm, compases, estilo, nombreArchivo) {
       t.nota(b0, freq(ch[0], 2), 2 * beat, "sine", 0.30);
       t.nota(b0 + 2 * beat, freq(ch[1], 3), 2 * beat, "sine", 0.22);
       t.nota(b0 + beat * 0.5, freq(ch[2], 5), beat, "tri", 0.13);
+    } else if (estilo === "reggae") {
+      for (let b = 0; b < 4; b++) {
+        t.nota(b0 + b * beat + beat * 0.5, freq(ch[b % 3], 4), 0.14, "tri", 0.20);
+        t.nota(b0 + b * beat + beat * 0.5, freq(ch[(b + 1) % 3], 3), 0.14, "tri", 0.12);
+      }
+      t.kick(b0 + beat * 2); t.snare(b0 + beat * 2);
+      t.hat(b0 + beat); t.hat(b0 + beat * 3);
+      t.nota(b0, freq(ch[0], 2), beat * 1.5, "sine", 0.30);
+      t.nota(b0 + beat * 2.75, freq(ch[1], 2), beat * 0.7, "sine", 0.22);
+    } else if (estilo === "cumbia") {
+      for (let h = 0; h < 16; h++) t.hat(b0 + h * beat * 0.25, h % 4 === 2 ? 0.13 : 0.06);
+      t.kick(b0); t.kick(b0 + beat * 2);
+      t.snare(b0 + beat); t.snare(b0 + beat * 3);
+      t.nota(b0 + beat * 0.25, freq(ch[0], 2), beat * 0.6, "sine", 0.28);
+      t.nota(b0 + beat * 1.75, freq(ch[2], 2), beat * 0.5, "sine", 0.22);
+      t.nota(b0 + beat * 2.75, freq(ch[1], 2), beat * 0.6, "sine", 0.24);
+      for (let m = 0; m < 4; m++) {
+        const n = ch[m % 3];
+        t.nota(b0 + m * beat + beat * 0.125, freq(n, 5), 0.16, "saw", 0.10);
+      }
+    } else if (estilo === "trap") {
+      for (let h = 0; h < 16; h++) {
+        if (!(c % 2 === 1 && h >= 10 && h <= 14)) t.hat(b0 + h * beat * 0.25, 0.09);
+      }
+      t.kick(b0); t.kick(b0 + beat * 1.5); t.kick(b0 + beat * 2.75);
+      t.snare(b0 + beat * 2);
+      const sub = (iniSec, f) => {
+        const ini = Math.floor(iniSec * SR);
+        const len = Math.floor(beat * SR);
+        for (let i = 0; i < len && ini + i < t.s.length; i++) {
+          const tt = i / SR;
+          t.s[ini + i] += Math.sin(2 * Math.PI * f * Math.exp(-tt * 0.8) * tt) * 0.55 * Math.min(1, tt * 90);
+        }
+      };
+      sub(b0, freq(ch[0], 1));
+      sub(b0 + beat * 2, freq(ch[1], 1));
     } else {
       for (let p = 0; p < 4; p++) t.kick(b0 + p * beat);
       t.snare(b0 + beat * 0.5); t.snare(b0 + beat * 2.5);
