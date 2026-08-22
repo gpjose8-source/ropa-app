@@ -1,6 +1,5 @@
 import { escanearMusica } from "@/lib/db";
 import { rankingTendencias } from "@/lib/trends";
-import PlayerMusica from "@/components/PlayerMusica";
 import { escanearBiblioteca } from "@/actions/musica";
 
 export const dynamic = "force-dynamic";
@@ -83,8 +82,6 @@ export default function Musica() {
               </tbody>
             </table>
           </div>
-
-          <PlayerMusica songs={canciones} />
         </>
       )}
     </div>

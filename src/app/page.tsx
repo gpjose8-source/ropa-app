@@ -14,7 +14,7 @@ export default function Dashboard() {
   if (totalProductos === 0) {
     return (
       <div className="mx-auto max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
-        <h1 className="text-xl font-bold">Bienvenido a RopaFlow</h1>
+        <h1 className="text-xl font-bold">Bienvenido a GARAGE ONLINE</h1>
         <p className="mt-2 text-sm text-slate-400">
           Tu base de datos está vacía. Carga datos de ejemplo (productos de ropa
           americana, clientes y 14 días de ventas) para explorar el sistema.

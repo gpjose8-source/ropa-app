@@ -18,8 +18,8 @@ export default function Nav() {
     <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 font-bold">
-          <span className="rounded-lg bg-emerald-500 px-2 py-0.5 text-slate-950">RF</span>
-          <span className="hidden sm:inline">RopaFlow</span>
+          <span className="rounded-lg bg-emerald-500 px-2 py-0.5 text-slate-950">GO</span>
+          <span className="hidden sm:inline tracking-wide">GARAGE ONLINE</span>
         </Link>
         <nav className="flex flex-1 gap-1 overflow-x-auto text-sm">
           {LINKS.map((l) => {
