@@ -18,6 +18,7 @@ type Prod = {
   marca: string;
   precio_venta: number;
   stock: number;
+  foto?: string | null;
 };
 
 function igCode(url: string): string {
@@ -89,46 +90,35 @@ export default function Catalogo({ productos }: { productos: Prod[] }) {
         </div>
       </section>
 
-      {/* VIDEO + REEL */}
+      {/* INSTAGRAM */}
       <section>
-        <h2 className="mb-4 text-xl font-bold">🎬 Mira la ropa en acción</h2>
-        <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-          <video
-            src="/video/promo.mp4"
-            controls
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full rounded-2xl border border-slate-800 bg-black object-cover shadow-xl"
-          />
-          <div className="flex flex-col gap-4">
-            {IG_POSTS.map((url) => (
-              <iframe
-                key={url}
-                src={`https://www.instagram.com/reel/${igCode(url)}/embed`}
-                className="min-h-[480px] w-full rounded-2xl border border-slate-800 bg-slate-900"
-                frameBorder={0}
-                scrolling="no"
-                allowFullScreen
-                title="Instagram reel"
-              />
-            ))}
-            <a
-              href={IG_URL}
-              target="_blank"
-              className="flex flex-1 flex-col items-center justify-center gap-2 rounded-2xl bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-600 p-[2px]"
-            >
-              <span className="flex h-full w-full flex-col items-center justify-center gap-1 rounded-2xl bg-slate-950 px-6 py-8 text-center">
-                <span className="text-3xl">📸</span>
-                <span className="font-bold">Síguenos en Instagram</span>
-                <span className="text-sm text-slate-400">@{IG_USER}</span>
-                <span className="mt-1 text-xs text-slate-500">
-                  Nuevas prendas cada semana en stories
-                </span>
+        <h2 className="mb-4 text-xl font-bold">📸 Mira la ropa en acción</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {IG_POSTS.map((url) => (
+            <iframe
+              key={url}
+              src={`https://www.instagram.com/reel/${igCode(url)}/embed`}
+              className="min-h-[480px] w-full rounded-2xl border border-slate-800 bg-slate-900"
+              frameBorder={0}
+              scrolling="no"
+              allowFullScreen
+              title="Instagram reel"
+            />
+          ))}
+          <a
+            href={IG_URL}
+            target="_blank"
+            className="flex flex-1 flex-col rounded-2xl bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-600 p-[2px]"
+          >
+            <span className="flex h-full flex-col items-center justify-center gap-1 rounded-2xl bg-slate-950 px-6 py-8 text-center">
+              <span className="text-3xl">📸</span>
+              <span className="font-bold">Síguenos en Instagram</span>
+              <span className="text-sm text-slate-400">@{IG_USER}</span>
+              <span className="mt-1 text-xs text-slate-500">
+                Nuevas prendas cada semana en stories
               </span>
-            </a>
-          </div>
+            </span>
+          </a>
         </div>
       </section>
 
@@ -182,7 +172,20 @@ export default function Catalogo({ productos }: { productos: Prod[] }) {
               className="group cursor-pointer overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition hover:-translate-y-1 hover:border-emerald-500/60 hover:shadow-lg hover:shadow-emerald-500/10"
             >
               <div className="relative">
-                <PrendaImg categoria={p.categoria} className="aspect-square w-full transition group-hover:scale-105" />
+                {p.foto ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.foto}
+                    alt={p.nombre}
+                    className="aspect-square w-full bg-slate-950 object-cover transition duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <PrendaImg
+                    categoria={p.categoria}
+                    marca={p.marca}
+                    className="aspect-square w-full transition group-hover:scale-105"
+                  />
+                )}
                 {p.stock <= 2 && (
                   <span className="absolute left-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold">
                     ¡Últimas {p.stock}!
@@ -237,7 +240,12 @@ export default function Catalogo({ productos }: { productos: Prod[] }) {
             className="w-full max-w-md space-y-4 rounded-t-3xl border border-slate-700 bg-slate-900 p-6 sm:rounded-3xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <PrendaImg categoria={sel.categoria} className="mx-auto h-44 w-44" />
+            {sel.foto ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={sel.foto} alt={sel.nombre} className="mx-auto h-52 w-52 rounded-2xl object-cover" />
+            ) : (
+              <PrendaImg categoria={sel.categoria} marca={sel.marca} className="mx-auto h-44 w-44" />
+            )}
             <div>
               <p className="text-xs uppercase tracking-wide text-slate-500">{sel.marca}</p>
               <h3 className="text-xl font-bold">{sel.nombre}</h3>

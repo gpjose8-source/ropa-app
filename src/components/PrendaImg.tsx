@@ -7,14 +7,23 @@ const COLORS: Record<string, [string, string]> = {
   zapatos: ["#34d399", "#059669"],
 };
 
+const BRANDS: Record<string, { bg: string; fg: string; label: string }> = {
+  "Tommy Hilfiger": { bg: "#0f2d52", fg: "#ffffff", label: "TOMMY" },
+  "Calvin Klein": { bg: "#000000", fg: "#ffffff", label: "CALVIN KLEIN" },
+  Hollister: { bg: "#14342b", fg: "#e8d9a0", label: "HOLLISTER" },
+};
+
 export default function PrendaImg({
   categoria,
+  marca,
   className = "",
 }: {
   categoria: string;
+  marca?: string;
   className?: string;
 }) {
   const [c1, c2] = COLORS[categoria] ?? COLORS.camiseta;
+  const b = marca ? BRANDS[marca] : undefined;
   return (
     <svg viewBox="0 0 200 200" className={className} role="img" aria-label={categoria}>
       <defs>
@@ -61,6 +70,23 @@ export default function PrendaImg({
           </>
         )}
       </g>
+      {b && (
+        <g>
+          <rect x={200 - (b.label.length * 7 + 22)} y={162} width={b.label.length * 7 + 16} height={26} rx={6} fill={b.bg} stroke="#ffffff55" />
+          <text
+            x={200 - (b.label.length * 7 + 14) / 2 - 3}
+            y={180}
+            textAnchor="middle"
+            fontSize={b.label.length > 8 ? 10 : 12}
+            fontWeight="800"
+            fill={b.fg}
+            fontFamily="Arial, sans-serif"
+            letterSpacing="1"
+          >
+            {b.label}
+          </text>
+        </g>
+      )}
     </svg>
   );
 }

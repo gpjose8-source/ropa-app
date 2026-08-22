@@ -166,5 +166,11 @@ base(PROG, 100, 12, "isla", "Brissa - Vacaciones en la Playa.wav");
 base([["A", "C", "E"], ["F", "A", "C"]], 78, 10, "chill", "Los Palmeros - Atardecer Tropical.wav");
 base([["C", "E", "G"], ["G", "B", "D"]], 74, 10, "chill", "Marea - Noche en la Orilla.wav");
 base(PROG, 124, 12, "fiesta", "Coco Loco - Fiesta Playera.wav");
+base([["A", "C", "E"], ["D", "F", "A"]], 76, 12, "reggae", "Isla Brava - Reggae del Puerto.wav");
+base([["C", "E", "G"], ["F", "A", "C"], ["A", "C", "E"], ["G", "B", "D"]], 98, 12, "cumbia", "Cumbia del Muelle - Sonido Costeno.wav");
+base([["D", "F", "A"], ["A", "C", "E"]], 140, 12, "trap", "Marea 808 - Playa Nocturna.wav");
+base([["G", "B", "D"], ["C", "E", "G"]], 104, 12, "isla", "Sol Mayor - Cielo Despejado.wav");
+base([["F", "A", "C"], ["C", "E", "G"]], 82, 10, "chill", "Duna - Brisa Lenta.wav");
+base([["A", "C", "E"], ["G", "B", "D"], ["F", "A", "C"], ["C", "E", "G"]], 126, 12, "fiesta", "Fiesta Coral - Bailable de Verano.wav");
 
 console.log("OK ->", DIR);
