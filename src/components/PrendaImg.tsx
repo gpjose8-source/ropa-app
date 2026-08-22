@@ -1,6 +1,6 @@
 const BRANDS: Record<string, { bg: string; fg: string; label: string }> = {
-  "Tommy Hilfiger": { bg: "#0f2d52", fg: "#ffffff", label: "TOMMY" },
-  "Calvin Klein": { bg: "#000000", fg: "#ffffff", label: "CALVIN KLEIN" },
+  "Tommy Hilfiger": { bg: "#0f2d52", fg: "#ffffff", label: "TOMMY HILFIGER" },
+  "Calvin Klein": { bg: "#000000", fg: "#ffffff", label: "CALVIN KLEIN JEANS" },
   Hollister: { bg: "#14342b", fg: "#e8d9a0", label: "HOLLISTER" },
   "Polo Ralph Lauren": { bg: "#0a1f44", fg: "#ffffff", label: "POLO RALPH LAUREN" },
   "Levi's": { bg: "#c41230", fg: "#ffffff", label: "LEVI'S" },
@@ -13,7 +13,17 @@ const BRANDS: Record<string, { bg: string; fg: string; label: string }> = {
   "American Eagle": { bg: "#8b1e3f", fg: "#ffffff", label: "AMERICAN EAGLE" },
   "Old Navy": { bg: "#00274d", fg: "#ffcc00", label: "OLD NAVY" },
   Wrangler: { bg: "#8a4b08", fg: "#ffe9c2", label: "WRANGLER" },
+  "Abercrombie & Fitch": { bg: "#1c2f26", fg: "#e8dfc8", label: "ABERCROMBIE & FITCH" },
+  Nautica: { bg: "#003366", fg: "#ffffff", label: "NAUTICA" },
 };
+
+function tamLabel(len: number): number {
+  if (len <= 8) return 13;
+  if (len <= 12) return 11;
+  if (len <= 16) return 9.5;
+  if (len <= 20) return 8;
+  return 7;
+}
 
 const TEE =
   "M118 80 L86 98 L58 154 L96 174 L112 148 L112 332 Q200 346 288 332 L288 148 L304 174 L342 154 L314 98 L282 80 Q240 106 200 106 Q160 106 118 80 Z";
@@ -45,6 +55,10 @@ function paleta(marca?: string): Palette {
       return { light: "#a9743c", base: "#7a4e21", dark: "#4c2f12" };
     case "The North Face":
       return { light: "#e8eaee", base: "#b9bec7", dark: "#767d89" };
+    case "Abercrombie & Fitch":
+      return { light: "#4a6a55", base: "#2c4638", dark: "#16281f" };
+    case "Nautica":
+      return { light: "#3d7ab8", base: "#1a5290", dark: "#0a3059" };
     default:
       return { light: "#dde1e8", base: "#c9ced7", dark: "#9ba3b0" };
   }
@@ -83,6 +97,14 @@ export default function PrendaImg({
           <stop offset="60%" stopColor="#0f172a" stopOpacity="0" />
           <stop offset="100%" stopColor="#0f172a" stopOpacity="0.13" />
         </radialGradient>
+        <linearGradient id={`brillo-${u}`} x1="0" y1="0" x2="0.7" y2="1">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.30" />
+          <stop offset="45%" stopColor="#ffffff" stopOpacity="0.06" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+        </linearGradient>
+        <pattern id={`tela-${u}`} width="6" height="6" patternUnits="userSpaceOnUse">
+          <path d="M0 3 H6 M3 0 V6" stroke="#000000" strokeWidth="0.4" opacity="0.10" />
+        </pattern>
         <linearGradient id={`g-${u}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={p.light} />
           <stop offset="55%" stopColor={p.base} />
@@ -269,30 +291,45 @@ export default function PrendaImg({
       )}
 
       {silueta && (
-        <rect width="400" height="400" filter={`url(#n-${u})`} clipPath={`url(#c-${u})`} />
+        <>
+          <rect width="400" height="400" filter={`url(#n-${u})`} clipPath={`url(#c-${u})`} />
+          <rect width="400" height="400" fill={`url(#tela-${u})`} clipPath={`url(#c-${u})`} />
+          <rect width="400" height="400" fill={`url(#brillo-${u})`} clipPath={`url(#c-${u})`} />
+        </>
+      )}
+
+      {/* ETIQUETA DE PRECIO COLGANTE */}
+      {silueta && (
+        <g transform="rotate(14 300 170)">
+          <line x1="288" y1="128" x2="304" y2="158" stroke="#9a7b4f" strokeWidth="1.6" />
+          <rect x="290" y="156" width="38" height="24" rx="3" fill="#fdf6e3" stroke="#d4c9a8" />
+          <circle cx="296" cy="162" r="2.2" fill="#b3a37e" />
+          <line x1="302" y1="168" x2="322" y2="168" stroke="#b23b3b" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="302" y1="173" x2="315" y2="173" stroke="#8a8a8a" strokeWidth="1.6" strokeLinecap="round" />
+        </g>
       )}
       <rect width="400" height="400" fill={`url(#v-${u})`} />
 
       {b && (
         <g>
           <rect
-            x={400 - (b.label.length * 7.2 + 24)}
-            y={360}
-            width={b.label.length * 7.2 + 16}
-            height={27}
-            rx={6}
+            x={12}
+            y={358}
+            width={b.label.length * tamLabel(b.label.length) * 0.62 + 20}
+            height={28}
+            rx={7}
             fill={b.bg}
-            stroke="#ffffff66"
+            stroke="#ffffff77"
+            strokeWidth="1.5"
           />
           <text
-            x={400 - (b.label.length * 7.2 + 8) / 2 - 4}
-            y={379}
-            textAnchor="middle"
-            fontSize={b.label.length > 8 ? 10.5 : 13}
+            x={22}
+            y={377}
+            fontSize={tamLabel(b.label.length)}
             fontWeight="800"
             fill={b.fg}
             fontFamily="Arial, sans-serif"
-            letterSpacing="1"
+            letterSpacing={b.label.length > 16 ? 0.4 : 1.2}
           >
             {b.label}
           </text>
