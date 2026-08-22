@@ -2,6 +2,17 @@ const BRANDS: Record<string, { bg: string; fg: string; label: string }> = {
   "Tommy Hilfiger": { bg: "#0f2d52", fg: "#ffffff", label: "TOMMY" },
   "Calvin Klein": { bg: "#000000", fg: "#ffffff", label: "CALVIN KLEIN" },
   Hollister: { bg: "#14342b", fg: "#e8d9a0", label: "HOLLISTER" },
+  "Polo Ralph Lauren": { bg: "#0a1f44", fg: "#ffffff", label: "POLO RALPH LAUREN" },
+  "Levi's": { bg: "#c41230", fg: "#ffffff", label: "LEVI'S" },
+  Nike: { bg: "#111111", fg: "#ffffff", label: "NIKE" },
+  "Under Armour": { bg: "#1a1a1a", fg: "#ff3333", label: "UNDER ARMOUR" },
+  Gap: { bg: "#002e6e", fg: "#ffffff", label: "GAP" },
+  Champion: { bg: "#b21f2d", fg: "#ffffff", label: "CHAMPION" },
+  Carhartt: { bg: "#624a2e", fg: "#ffb300", label: "CARHARTT" },
+  "The North Face": { bg: "#000000", fg: "#e5e5e5", label: "THE NORTH FACE" },
+  "American Eagle": { bg: "#8b1e3f", fg: "#ffffff", label: "AMERICAN EAGLE" },
+  "Old Navy": { bg: "#00274d", fg: "#ffcc00", label: "OLD NAVY" },
+  Wrangler: { bg: "#8a4b08", fg: "#ffe9c2", label: "WRANGLER" },
 };
 
 const TEE =
@@ -17,6 +28,23 @@ function paleta(marca?: string): Palette {
       return { light: "#2b4f85", base: "#1d3a66", dark: "#122544" };
     case "Calvin Klein":
       return { light: "#3a3a42", base: "#232329", dark: "#101014" };
+    case "Polo Ralph Lauren":
+      return { light: "#2b4a7d", base: "#14264a", dark: "#0b1730" };
+    case "Levi's":
+    case "Wrangler":
+      return { light: "#3d5c85", base: "#23405f", dark: "#122338" };
+    case "Nike":
+    case "Under Armour":
+      return { light: "#4b5563", base: "#23272f", dark: "#0d1015" };
+    case "Gap":
+    case "Old Navy":
+      return { light: "#3b6fc9", base: "#1d4a94", dark: "#0e2c5c" };
+    case "Champion":
+      return { light: "#94a3b8", base: "#5b6b7e", dark: "#37414e" };
+    case "Carhartt":
+      return { light: "#a9743c", base: "#7a4e21", dark: "#4c2f12" };
+    case "The North Face":
+      return { light: "#e8eaee", base: "#b9bec7", dark: "#767d89" };
     default:
       return { light: "#dde1e8", base: "#c9ced7", dark: "#9ba3b0" };
   }
@@ -192,6 +220,26 @@ export default function PrendaImg({
               <rect x="195" y="116" width="10" height="16" rx="3" fill="#9aa0aa" />
               <text x="158" y="150" fontSize="11" fontWeight="700" letterSpacing="2" fill="#ffffffaa" fontFamily="Arial">CK</text>
               <rect x="114" y="320" width="172" height="14" rx="4" fill={p.dark} />
+            </>
+          )}
+        </g>
+      )}
+
+      {/* GORRA */}
+      {categoria === "gorra" && (
+        <g>
+          <path d="M118 196 Q126 108 200 104 Q274 108 282 196 Q284 208 272 210 Q236 186 200 186 Q164 186 128 210 Q116 208 118 196 Z" fill={`url(#g-${u})`} stroke="#00000022" />
+          <path d="M200 106 L200 184" stroke="#00000033" strokeWidth="2" />
+          <circle cx="200" cy="102" r="6" fill={p.dark} stroke="#ffffff44" />
+          <path d="M148 214 Q200 248 262 212 Q268 222 254 230 Q198 256 142 228 Z" fill={p.dark} stroke="#00000033" />
+          <path d="M132 206 Q166 190 200 190" stroke="#ffffff55" strokeWidth="1.5" fill="none" />
+          {marca === "Nike" && (
+            <path d="M158 158 q34 14 84 -12 q-40 30 -78 20 Z" fill="#ffffff" opacity="0.92" />
+          )}
+          {marca === "Polo Ralph Lauren" && (
+            <>
+              <circle cx="200" cy="150" r="16" fill="#0a1f44" stroke="#ffffff88" strokeWidth="2" />
+              <text x="200" y="157" textAnchor="middle" fontSize="18" fill="#ffffff" fontFamily="Georgia">🐎</text>
             </>
           )}
         </g>
