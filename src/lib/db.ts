@@ -2,7 +2,10 @@ import path from "node:path";
 import fs from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 
-const DB_PATH = path.join(process.cwd(), "tienda.db");
+const DB_PATH =
+  process.env.VERCEL === "1"
+    ? "/tmp/tienda.db"
+    : path.join(process.cwd(), "tienda.db");
 
 let _db: DatabaseSync | null = null;
 
