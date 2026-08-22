@@ -67,6 +67,18 @@ CREATE TABLE IF NOT EXISTS eventos_musica (
 
 CREATE INDEX IF NOT EXISTS idx_eventos_cancion ON eventos_musica(cancion_id, evento, creado_en);
 CREATE INDEX IF NOT EXISTS idx_ventas_fecha ON ventas(fecha);
+
+CREATE TABLE IF NOT EXISTS pedidos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  cliente TEXT NOT NULL,
+  telefono TEXT DEFAULT '',
+  producto_id INTEGER REFERENCES productos(id),
+  talla TEXT,
+  total REAL NOT NULL,
+  metodo TEXT NOT NULL,
+  estado TEXT DEFAULT 'pendiente',
+  creado_en TEXT DEFAULT (datetime('now','localtime'))
+);
 `;
 
 export function db(): DatabaseSync {

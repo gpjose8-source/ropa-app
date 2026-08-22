@@ -80,9 +80,9 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
       {!activo && (
         <button
           onClick={() => intentar(false)}
-          className="fixed bottom-5 right-5 z-50 max-w-[90vw] truncate rounded-full bg-red-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-red-300 transition hover:bg-red-500"
+          className="animate-pulse fixed bottom-5 left-1/2 z-50 max-w-[92vw] -translate-x-1/2 truncate rounded-full bg-gradient-to-r from-red-600 to-rose-500 px-7 py-4 text-base font-black text-white shadow-xl shadow-red-400/40 transition hover:scale-105"
         >
-          ðŸŽ§ Escuchar tendencia #1: {actual.titulo}
+          🎵 ¡La música ya está sonando! Toca para subir el volumen · {actual.titulo}
         </button>
       )}
 

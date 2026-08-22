@@ -51,6 +51,10 @@ export default function PrendaImg({
           <stop offset="70%" stopColor="#eef1f5" />
           <stop offset="100%" stopColor="#dde2e9" />
         </radialGradient>
+        <radialGradient id={`v-${u}`} cx="50%" cy="45%" r="72%">
+          <stop offset="60%" stopColor="#0f172a" stopOpacity="0" />
+          <stop offset="100%" stopColor="#0f172a" stopOpacity="0.13" />
+        </radialGradient>
         <linearGradient id={`g-${u}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={p.light} />
           <stop offset="55%" stopColor={p.base} />
@@ -71,6 +75,23 @@ export default function PrendaImg({
 
       <rect width="400" height="400" fill={`url(#bg-${u})`} />
       <ellipse cx="200" cy="354" rx="120" ry="15" fill="#0f172a" opacity="0.10" />
+
+      {/* PERCHA DE MADERA */}
+      {(categoria === "camiseta" || categoria === "chaqueta") && (
+        <g>
+          <path d="M200 16 q11 1 11 11 t-11 10 v9" fill="none" stroke="#8a5a2b" strokeWidth="5" strokeLinecap="round" />
+          <path d="M92 98 L200 54 L308 98" fill="none" stroke="#a06a33" strokeWidth="9" strokeLinecap="round" />
+          <path d="M92 98 L200 54 L308 98" fill="none" stroke="#c68b4d" strokeWidth="4" strokeLinecap="round" />
+        </g>
+      )}
+      {categoria === "pantalon" && (
+        <g>
+          <path d="M200 20 q11 1 11 11 t-11 10 v13" fill="none" stroke="#8a5a2b" strokeWidth="5" strokeLinecap="round" />
+          <rect x="140" y="46" width="120" height="9" rx="4.5" fill="#a06a33" />
+          <rect x="128" y="52" width="15" height="26" rx="4" fill="#8a5a2b" />
+          <rect x="257" y="52" width="15" height="26" rx="4" fill="#8a5a2b" />
+        </g>
+      )}
 
       {/* CAMISETA / POLO / CAMISA */}
       {(categoria === "camiseta" || categoria === "") && (
@@ -202,6 +223,7 @@ export default function PrendaImg({
       {silueta && (
         <rect width="400" height="400" filter={`url(#n-${u})`} clipPath={`url(#c-${u})`} />
       )}
+      <rect width="400" height="400" fill={`url(#v-${u})`} />
 
       {b && (
         <g>

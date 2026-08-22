@@ -33,7 +33,7 @@ export default function Nav() {
                 className={`whitespace-nowrap rounded-lg px-3 py-1.5 transition ${
                   active
                     ? "bg-gray-100 font-semibold text-white"
-                    : "text-slate-800 hover:bg-white hover:text-slate-200"
+                    : "text-slate-800 hover:bg-red-50 hover:text-red-600"
                 }`}
               >
                 {l.label}
