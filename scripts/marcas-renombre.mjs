@@ -10,7 +10,7 @@ const marcas = [
 ];
 
 const ph = marcas.map(() => "?").join(",");
-db.prepare(`DELETE FROM productos WHERE marca IN (${ph})`).run(...marcas);
+db.prepare(`UPDATE productos SET activo=0 WHERE marca IN (${ph})`).run(...marcas);
 
 const items = [
   ["Camiseta polo Big Pony clásica", "camiseta", "M", "Polo Ralph Lauren", 9.0],
