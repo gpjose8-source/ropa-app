@@ -131,9 +131,7 @@ export function escanearMusica(): { agregadas: number; eliminadas: number } {
   const dir = musicaDir();
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   const archivos = new Set(
-    fs
-      .readdirSync(dir)
-      .filter((f) => f.toLowerCase().endsWith(".mp3"))
+    fs.readdirSync(dir).filter((f) => /\.(mp3|wav)$/i.test(f))
   );
 
   const existentes = new Set(
@@ -143,7 +141,7 @@ export function escanearMusica(): { agregadas: number; eliminadas: number } {
   let agregadas = 0;
   for (const archivo of archivos) {
     if (!existentes.has(archivo)) {
-      const limpio = archivo.replace(/\.mp3$/i, "");
+      const limpio = archivo.replace(/\.(mp3|wav)$/i, "");
       const [artista, titulo] = limpio.includes(" - ")
         ? [limpio.split(" - ")[0].trim(), limpio.split(" - ").slice(1).join(" - ").trim()]
         : ["", limpio.trim()];
