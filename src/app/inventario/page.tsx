@@ -27,45 +27,45 @@ export default async function Inventario({
   );
 
   const inputCls =
-    "w-full rounded-lg border border-slate-700 bg-slate-800 px-2 py-1.5 text-sm outline-none focus:border-emerald-500";
+    "w-full rounded-lg border border-gray-300 bg-gray-100 px-2 py-1.5 text-sm outline-none focus:border-red-500";
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Inventario</h1>
 
       <form method="get" className="flex flex-wrap gap-2">
-        <input name="q" defaultValue={busqueda} placeholder="Buscar nombre o marca…" className={`${inputCls} max-w-xs flex-1`} />
+        <input name="q" defaultValue={busqueda} placeholder="Buscar nombre o marcaâ€¦" className={`${inputCls} max-w-xs flex-1`} />
         <select name="cat" defaultValue={cat} className={inputCls}>
-          <option value="">Todas las categorías</option>
+          <option value="">Todas las categorÃ­as</option>
           {categorias.map((c) => (
             <option key={c.categoria} value={c.categoria}>{c.categoria}</option>
           ))}
         </select>
-        <button className="rounded-lg bg-slate-700 px-4 py-1.5 text-sm hover:bg-slate-600">Filtrar</button>
+        <button className="rounded-lg bg-gray-200 px-4 py-1.5 text-sm hover:bg-gray-300">Filtrar</button>
       </form>
 
-      <details className="rounded-xl border border-slate-800 bg-slate-900 p-4">
-        <summary className="cursor-pointer font-semibold text-emerald-400">+ Nueva prenda</summary>
+      <details className="rounded-xl border border-gray-200 bg-white p-4">
+        <summary className="cursor-pointer font-semibold text-red-600">+ Nueva prenda</summary>
         <form action={crearProducto} className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
           <input name="nombre" required placeholder="Nombre *" className={`${inputCls} col-span-2`} />
-          <input name="categoria" placeholder="Categoría" className={inputCls} />
+          <input name="categoria" placeholder="CategorÃ­a" className={inputCls} />
           <input name="marca" placeholder="Marca" className={inputCls} />
-          <input name="talla" placeholder="Talla (S/M/L/32…)" className={inputCls} />
+          <input name="talla" placeholder="Talla (S/M/L/32â€¦)" className={inputCls} />
           <select name="estado" className={inputCls}>
             <option value="A">Estado A</option><option value="B">Estado B</option><option value="C">Estado C</option>
           </select>
           <input name="precio_costo" type="number" step="0.01" min="0" placeholder="Costo $" className={inputCls} />
           <input name="precio_venta" type="number" step="0.01" min="0" placeholder="Venta $" className={inputCls} />
           <input name="stock" type="number" min="0" placeholder="Stock" className={inputCls} />
-          <button className="col-span-2 rounded-lg bg-emerald-500 px-4 py-2 font-semibold text-slate-950 hover:bg-emerald-400 md:col-span-1">
+          <button className="col-span-2 rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-500 md:col-span-1">
             Guardar
           </button>
         </form>
       </details>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-800">
+      <div className="overflow-x-auto rounded-xl border border-gray-200">
         <table className="w-full min-w-[720px] text-sm">
-          <thead className="bg-slate-900 text-left text-xs uppercase text-slate-500">
+          <thead className="bg-white text-left text-xs uppercase text-slate-500">
             <tr>
               <th className="p-3">Prenda</th><th className="p-3">Cat.</th><th className="p-3">Talla</th>
               <th className="p-3">Estado</th><th className="p-3 text-right">Costo</th>
@@ -77,17 +77,17 @@ export default async function Inventario({
             {productos.map((p) => {
               const margen = pct(p.precio_venta - p.precio_costo, p.precio_venta);
               return (
-                <tr key={p.id} className="border-t border-slate-800/60 hover:bg-slate-900/50">
+                <tr key={p.id} className="border-t border-gray-200/60 hover:bg-white/50">
                   <td className="p-3">
                     <span className="font-medium">{p.nombre}</span>
                     {p.marca && <span className="block text-xs text-slate-500">{p.marca}</span>}
                   </td>
-                  <td className="text-slate-300">{p.categoria}</td>
+                  <td className="text-slate-800">{p.categoria}</td>
                   <td>{p.talla}</td>
                   <td><BadgeEstado e={p.estado} /></td>
-                  <td className="text-right text-slate-400">{usd(p.precio_costo)}</td>
+                  <td className="text-right text-slate-800">{usd(p.precio_costo)}</td>
                   <td className="text-right font-medium">{usd(p.precio_venta)}</td>
-                  <td className={`text-right ${margen >= 55 ? "text-emerald-400" : margen >= 40 ? "text-amber-300" : "text-red-400"}`}>
+                  <td className={`text-right ${margen >= 55 ? "text-red-600" : margen >= 40 ? "text-amber-300" : "text-red-400"}`}>
                     {margen}%
                   </td>
                   <td>
@@ -95,13 +95,13 @@ export default async function Inventario({
                       <form action={ajustarStock}>
                         <input type="hidden" name="id" value={p.id} />
                         <input type="hidden" name="delta" value="-1" />
-                        <button className="h-6 w-6 rounded bg-slate-700 hover:bg-slate-600">−</button>
+                        <button className="h-6 w-6 rounded bg-gray-200 hover:bg-gray-300">âˆ’</button>
                       </form>
                       <span className={`w-8 text-center font-semibold ${p.stock <= 2 ? "text-red-400" : ""}`}>{p.stock}</span>
                       <form action={ajustarStock}>
                         <input type="hidden" name="id" value={p.id} />
                         <input type="hidden" name="delta" value="1" />
-                        <button className="h-6 w-6 rounded bg-slate-700 hover:bg-slate-600">+</button>
+                        <button className="h-6 w-6 rounded bg-gray-200 hover:bg-gray-300">+</button>
                       </form>
                     </div>
                   </td>
@@ -127,7 +127,7 @@ export default async function Inventario({
 function BadgeEstado({ e }: { e: string }) {
   const cls =
     e === "A"
-      ? "bg-emerald-500/15 text-emerald-400"
+      ? "bg-red-600/15 text-red-600"
       : e === "B"
       ? "bg-amber-500/15 text-amber-400"
       : "bg-red-500/15 text-red-400";

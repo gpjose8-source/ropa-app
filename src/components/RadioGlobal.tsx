@@ -80,33 +80,33 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
       {!activo && (
         <button
           onClick={() => intentar(false)}
-          className="fixed bottom-5 right-5 z-50 max-w-[90vw] truncate rounded-full bg-emerald-500 px-5 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
+          className="fixed bottom-5 right-5 z-50 max-w-[90vw] truncate rounded-full bg-red-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-red-300 transition hover:bg-red-500"
         >
-          🎧 Escuchar tendencia #1: {actual.titulo}
+          ðŸŽ§ Escuchar tendencia #1: {actual.titulo}
         </button>
       )}
 
       {activo && (
-        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-800 bg-slate-950/95 backdrop-blur">
+        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-2.5">
             {silencio && (
               <button
                 onClick={() => intentar(false)}
-                className="animate-pulse rounded-full bg-amber-400 px-4 py-2 text-sm font-bold text-slate-950"
+                className="animate-pulse rounded-full bg-amber-400 px-4 py-2 text-sm font-bold text-white"
               >
-                🔊 Activar sonido
+                ðŸ”Š Activar sonido
               </button>
             )}
 
             <div className="min-w-[150px] flex-1">
               <p className="truncate text-sm font-semibold">
-                ♪ {actual.titulo}
+                â™ª {actual.titulo}
                 {actual.artista && (
-                  <span className="font-normal text-slate-400"> — {actual.artista}</span>
+                  <span className="font-normal text-slate-800"> â€” {actual.artista}</span>
                 )}
               </p>
               <p className="text-xs text-slate-500">
-                GARAGE RADIO · tendencia · score {actual.score}
+                GARAGE RADIO Â· tendencia Â· score {actual.score}
               </p>
             </div>
 
@@ -118,24 +118,24 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
                 }
               }}
               disabled={liked.includes(actual.id)}
-              className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm hover:bg-slate-700 disabled:opacity-40"
+              className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm hover:bg-red-100 disabled:opacity-40"
             >
-              ♥
+              â™¥
             </button>
 
             <button
               onClick={() => avanzar(true)}
-              className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm hover:bg-slate-700"
+              className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm hover:bg-red-100"
             >
-              ⏭
+              â­
             </button>
 
-            <label className="flex items-center gap-1.5 text-xs text-slate-400">
+            <label className="flex items-center gap-1.5 text-xs text-slate-800">
               <input
                 type="checkbox"
                 checked={radio}
                 onChange={(e) => setRadio(e.target.checked)}
-                className="accent-emerald-500"
+                className="accent-red-600"
               />
               Auto
             </label>
@@ -148,9 +148,9 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
                   if (a.paused) a.play().catch(() => {});
                   else a.pause();
                 }}
-                className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm hover:bg-slate-700"
+                className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm hover:bg-red-100"
               >
-                ⏯
+                â¯
               </button>
             )}
 
@@ -159,10 +159,10 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
                 ref.current?.pause();
                 setActivo(false);
               }}
-              className="rounded-lg bg-slate-800 px-2.5 py-1.5 text-sm text-slate-300 hover:bg-red-600 hover:text-white"
+              className="rounded-lg bg-gray-100 px-2.5 py-1.5 text-sm text-slate-800 hover:bg-red-600 hover:text-white"
               title="Apagar radio"
             >
-              ✕
+              âœ•
             </button>
           </div>
         </div>

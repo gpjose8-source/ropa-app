@@ -9,9 +9,9 @@ export default function Vender() {
 
   if (productos.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 text-sm text-slate-400">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 text-sm text-slate-800">
         No hay prendas con stock disponible. Agrega productos en{" "}
-        <a href="/inventario" className="text-emerald-400 hover:underline">Inventario</a>.
+        <a href="/inventario" className="text-red-600 hover:underline">Inventario</a>.
       </div>
     );
   }

@@ -13,14 +13,14 @@ export default function Dashboard() {
 
   if (totalProductos === 0) {
     return (
-      <div className="mx-auto max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
+      <div className="mx-auto max-w-md rounded-2xl border border-gray-200 bg-white p-8 text-center">
         <h1 className="text-xl font-bold">Bienvenido a GARAGE ONLINE</h1>
-        <p className="mt-2 text-sm text-slate-400">
-          Tu base de datos está vacía. Carga datos de ejemplo (productos de ropa
-          americana, clientes y 14 días de ventas) para explorar el sistema.
+        <p className="mt-2 text-sm text-slate-800">
+          Tu base de datos estÃ¡ vacÃ­a. Carga datos de ejemplo (productos de ropa
+          americana, clientes y 14 dÃ­as de ventas) para explorar el sistema.
         </p>
         <form action={seedDemo} className="mt-6">
-          <button className="rounded-xl bg-emerald-500 px-5 py-2.5 font-semibold text-slate-950 hover:bg-emerald-400">
+          <button className="rounded-xl bg-red-600 px-5 py-2.5 font-semibold text-white hover:bg-red-500">
             Cargar datos de ejemplo
           </button>
         </form>
@@ -68,29 +68,29 @@ export default function Dashboard() {
         <KpiCard
           label="Margen del mes"
           value={`${margenMes}%`}
-          sub={`Ingresos ${usd(mes.t)} · Costo ${usd(mes.c)}`}
+          sub={`Ingresos ${usd(mes.t)} Â· Costo ${usd(mes.c)}`}
           tone={margenMes >= 50 ? "good" : margenMes >= 30 ? "warn" : "bad"}
         />
         <KpiCard
-          label="Stock bajo (≤2)"
+          label="Stock bajo (â‰¤2)"
           value={String(stockBajo)}
           sub={stockBajo > 0 ? "Reponer pronto" : "Todo bien"}
           tone={stockBajo > 3 ? "bad" : stockBajo > 0 ? "warn" : "default"}
         />
       </div>
 
-      <section className="rounded-xl border border-slate-800 bg-slate-900 p-4">
-        <h2 className="mb-3 font-semibold">Top categorías · últimos 30 días</h2>
+      <section className="rounded-xl border border-gray-200 bg-white p-4">
+        <h2 className="mb-3 font-semibold">Top categorÃ­as Â· Ãºltimos 30 dÃ­as</h2>
         {topCat.length === 0 && (
-          <p className="text-sm text-slate-500">Aún no hay ventas registradas.</p>
+          <p className="text-sm text-slate-500">AÃºn no hay ventas registradas.</p>
         )}
         <div className="space-y-2">
           {topCat.map((c) => (
             <div key={c.categoria} className="flex items-center gap-3 text-sm">
-              <span className="w-28 shrink-0 truncate text-slate-300">{c.categoria}</span>
-              <div className="h-3 flex-1 overflow-hidden rounded-full bg-slate-800">
+              <span className="w-28 shrink-0 truncate text-slate-800">{c.categoria}</span>
+              <div className="h-3 flex-1 overflow-hidden rounded-full bg-gray-100">
                 <div
-                  className="h-full rounded-full bg-emerald-500"
+                  className="h-full rounded-full bg-red-600"
                   style={{ width: `${(c.ingreso / maxIngreso) * 100}%` }}
                 />
               </div>
@@ -101,10 +101,10 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <section className="rounded-xl border border-slate-800 bg-slate-900 p-4">
+      <section className="rounded-xl border border-gray-200 bg-white p-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-semibold">Últimas ventas</h2>
-          <Link href="/vender" className="text-sm text-emerald-400 hover:text-emerald-300">
+          <h2 className="font-semibold">Ãšltimas ventas</h2>
+          <Link href="/vender" className="text-sm text-red-600 hover:text-red-500">
             + Nueva venta
           </Link>
         </div>
@@ -112,17 +112,17 @@ export default function Dashboard() {
           <thead className="text-left text-xs uppercase text-slate-500">
             <tr>
               <th className="pb-2">#</th><th className="pb-2">Cliente</th>
-              <th className="pb-2">Método</th><th className="pb-2">Fecha</th>
+              <th className="pb-2">MÃ©todo</th><th className="pb-2">Fecha</th>
               <th className="pb-2 text-right">Total</th>
             </tr>
           </thead>
           <tbody>
             {ultimas.map((v) => (
-              <tr key={v.id} className="border-t border-slate-800/60">
+              <tr key={v.id} className="border-t border-gray-200/60">
                 <td className="py-1.5">{v.id}</td>
                 <td>{v.cliente ?? <span className="text-slate-500">Ocasional</span>}</td>
                 <td className="capitalize">{v.metodo_pago}</td>
-                <td className="text-slate-400">{fechaHora(v.fecha)}</td>
+                <td className="text-slate-800">{fechaHora(v.fecha)}</td>
                 <td className="text-right font-medium">{usd(v.total)}</td>
               </tr>
             ))}

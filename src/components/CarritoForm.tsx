@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import { crearVenta } from "@/actions/ventas";
@@ -28,7 +28,7 @@ export default function CarritoForm({
   }, 0);
 
   const inputCls =
-    "rounded-lg border border-slate-700 bg-slate-800 px-2 py-1.5 text-sm outline-none focus:border-emerald-500";
+    "rounded-lg border border-gray-300 bg-gray-100 px-2 py-1.5 text-sm outline-none focus:border-red-500";
 
   function actualizar(i: number, cambios: Partial<Fila>) {
     setFilas((fs) => fs.map((f, j) => (j === i ? { ...f, ...cambios } : f)));
@@ -38,7 +38,7 @@ export default function CarritoForm({
     <form
       action={crearVenta}
       onSubmit={() => setEnviando(true)}
-      className="space-y-4 rounded-xl border border-slate-800 bg-slate-900 p-4"
+      className="space-y-4 rounded-xl border border-gray-200 bg-white p-4"
     >
       <input type="hidden" name="lineas" value={JSON.stringify(filas)} />
 
@@ -54,7 +54,7 @@ export default function CarritoForm({
               >
                 {productos.map((pr) => (
                   <option key={pr.id} value={pr.id}>
-                    {pr.nombre} · {pr.talla} · {usd(pr.precio_venta)} (stock {pr.stock})
+                    {pr.nombre} Â· {pr.talla} Â· {usd(pr.precio_venta)} (stock {pr.stock})
                   </option>
                 ))}
               </select>
@@ -77,9 +77,9 @@ export default function CarritoForm({
                 <button
                   type="button"
                   onClick={() => setFilas((fs) => fs.filter((_, j) => j !== i))}
-                  className="rounded-lg bg-slate-700 px-2 py-1 text-sm hover:bg-red-600"
+                  className="rounded-lg bg-gray-200 px-2 py-1 text-sm hover:bg-red-600"
                 >
-                  ✕
+                  âœ•
                 </button>
               )}
             </div>
@@ -92,12 +92,12 @@ export default function CarritoForm({
         onClick={() =>
           setFilas((fs) => [...fs, { pid: productos[0].id, cant: 1 }])
         }
-        className="rounded-lg bg-slate-700 px-3 py-1.5 text-sm hover:bg-slate-600"
+        className="rounded-lg bg-gray-200 px-3 py-1.5 text-sm hover:bg-gray-300"
       >
         + Agregar prenda
       </button>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 pt-4">
         <div className="flex flex-wrap gap-2">
           <select name="cliente_id" className={inputCls} defaultValue="">
             <option value="">Cliente ocasional</option>
@@ -112,10 +112,10 @@ export default function CarritoForm({
           </select>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-lg font-bold text-emerald-400">{usd(total)}</span>
+          <span className="text-lg font-bold text-red-600">{usd(total)}</span>
           <button
             disabled={enviando || total === 0}
-            className="rounded-xl bg-emerald-500 px-6 py-2.5 font-bold text-slate-950 transition hover:bg-emerald-400 disabled:opacity-50"
+            className="rounded-xl bg-red-600 px-6 py-2.5 font-bold text-white transition hover:bg-red-500 disabled:opacity-50"
           >
             Cobrar
           </button>

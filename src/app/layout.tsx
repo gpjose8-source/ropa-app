@@ -8,8 +8,8 @@ import { rankingTendencias } from "@/lib/trends";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "GARAGE ONLINE — Ropa americana",
-  description: "Inventario, ventas, clientes y música con algoritmo de tendencias",
+  title: "GARAGE ONLINE â€” Ropa americana",
+  description: "Inventario, ventas, clientes y mÃºsica con algoritmo de tendencias",
 };
 
 export default function RootLayout({
@@ -38,7 +38,7 @@ export default function RootLayout({
 
   return (
     <html lang="es">
-      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased">
+      <body className="min-h-screen bg-white text-black antialiased">
         <Nav />
         <main className="mx-auto max-w-6xl px-4 pb-28 pt-6">{children}</main>
         <RadioGlobal songs={canciones} />
