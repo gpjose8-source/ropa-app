@@ -1,0 +1,13 @@
+Coloca aquí tus archivos de música en formato .mp3
+
+Nombres recomendados: "Artista - Titulo.mp3"
+Ejemplo: "Bad Bunny - MONACO.mp3"
+
+Después entra a la página Música de la app y pulsa
+"Escanear biblioteca" para registrarlas.
+
+El algoritmo de tendencias aprende de:
+- reproducciones recientes (momentum con decaimiento exponencial)
+- likes
+- tasa de finalización vs. skips
+- novedad (canciones nuevas suben rápido)

@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
+tienda.db
+tienda.db-journal
+.env*
+*.log
+cloudflared.exe
