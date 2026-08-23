@@ -10,6 +10,8 @@ const IG_USER = "garageclothingec";
 const IG_URL = `https://www.instagram.com/${IG_USER}/`;
 const IG_POSTS = ["https://www.instagram.com/reel/DGij1mIRHUi/"];
 
+const VIDEOS = Array.from({ length: 18 }, (_, i) => `/videos/video-${String(i + 1).padStart(2, "0")}.mp4`);
+
 type Prod = {
   id: number;
   nombre: string;
@@ -144,6 +146,29 @@ export default function Catalogo({
               GRATIS con compras desde ${ASESORIA_IMAGEN.gratisDesde}
             </span>
           </div>
+        </div>
+      </section>
+
+      {/* VIDEOS REALES DE LAS PRENDAS */}
+      <section>
+        <h2 className="mb-1 text-xl font-black text-black">📹 Videos reales de la ropa</h2>
+        <p className="mb-4 text-sm text-slate-800">
+          Mira el detalle, la tela y la caída de cada prenda antes de comprar
+        </p>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {VIDEOS.map((v, i) => (
+            <video
+              key={v}
+              src={v}
+              controls
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="aspect-[9/16] w-full rounded-xl border border-gray-200 bg-black object-cover"
+              aria-label={`Video de prenda ${i + 1}`}
+            />
+          ))}
         </div>
       </section>
 
