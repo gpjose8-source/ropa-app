@@ -29,27 +29,42 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
   const [liked, setLiked] = useState<number[]>([]);
   const ref = useRef<HTMLAudioElement | null>(null);
 
-  async function intentar(muted: boolean): Promise<boolean> {
+  async function intentar(conSonido: boolean): Promise<boolean> {
     const a = ref.current;
-    if (!a) return false;
-    a.muted = muted;
+    if (!a || songs.length === 0) return false;
+    a.muted = !conSonido;
     try {
       await a.play();
-      setSilencio(muted);
+      setSilencio(!conSonido);
       setActivo(true);
       return true;
     } catch {
+      if (!conSonido && a.muted === false) a.muted = true;
       return false;
     }
   }
 
   useEffect(() => {
     if (songs.length === 0) return;
-    const t = setTimeout(async () => {
-      if (await intentar(false)) return;
-      await intentar(true);
+    const t = setTimeout(() => {
+      intentar(true).then((ok) => {
+        if (!ok) intentar(false);
+      });
     }, 400);
-    return () => clearTimeout(t);
+
+    // Cualquier interacción del usuario activa el sonido
+    const despertar = () => {
+      intentar(true);
+    };
+    window.addEventListener("pointerdown", despertar);
+    window.addEventListener("touchstart", despertar, { passive: true });
+    window.addEventListener("keydown", despertar);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("pointerdown", despertar);
+      window.removeEventListener("touchstart", despertar);
+      window.removeEventListener("keydown", despertar);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,6 +84,7 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
         ref={ref}
         src={actual.url}
         loop={false}
+        preload="auto"
         className="hidden"
         onPlay={() => post(actual.id, "PLAY")}
         onEnded={() => {
@@ -77,36 +93,18 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
         }}
       />
 
-      {!activo && (
-        <button
-          onClick={() => intentar(false)}
-          className="animate-pulse fixed bottom-5 left-1/2 z-50 max-w-[92vw] -translate-x-1/2 truncate rounded-full bg-gradient-to-r from-red-600 to-rose-500 px-7 py-4 text-base font-black text-white shadow-xl shadow-red-400/40 transition hover:scale-105"
-        >
-          🎵 ¡La música ya está sonando! Toca para subir el volumen · {actual.titulo}
-        </button>
-      )}
-
-      {activo && (
+      {!silencio && (
         <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-2.5">
-            {silencio && (
-              <button
-                onClick={() => intentar(false)}
-                className="animate-pulse rounded-full bg-amber-400 px-4 py-2 text-sm font-bold text-white"
-              >
-                ðŸ”Š Activar sonido
-              </button>
-            )}
-
             <div className="min-w-[150px] flex-1">
               <p className="truncate text-sm font-semibold">
-                â™ª {actual.titulo}
+                ♪ {actual.titulo}
                 {actual.artista && (
-                  <span className="font-normal text-slate-800"> â€” {actual.artista}</span>
+                  <span className="font-normal text-slate-800"> — {actual.artista}</span>
                 )}
               </p>
               <p className="text-xs text-slate-500">
-                GARAGE RADIO Â· tendencia Â· score {actual.score}
+                GARAGE RADIO · tendencia · score {actual.score}
               </p>
             </div>
 
@@ -120,14 +118,14 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
               disabled={liked.includes(actual.id)}
               className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm hover:bg-red-100 disabled:opacity-40"
             >
-              â™¥
+              ♥
             </button>
 
             <button
               onClick={() => avanzar(true)}
               className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm hover:bg-red-100"
             >
-              â­
+              ⏭
             </button>
 
             <label className="flex items-center gap-1.5 text-xs text-slate-800">
@@ -140,32 +138,40 @@ export default function RadioGlobal({ songs }: { songs: Song[] }) {
               Auto
             </label>
 
-            {!silencio && (
-              <button
-                onClick={() => {
-                  const a = ref.current;
-                  if (!a) return;
-                  if (a.paused) a.play().catch(() => {});
-                  else a.pause();
-                }}
-                className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm hover:bg-red-100"
-              >
-                â¯
-              </button>
-            )}
+            <button
+              onClick={() => {
+                const a = ref.current;
+                if (!a) return;
+                if (a.paused) a.play().catch(() => {});
+                else a.pause();
+              }}
+              className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm hover:bg-red-100"
+            >
+              ⏯
+            </button>
 
             <button
               onClick={() => {
                 ref.current?.pause();
                 setActivo(false);
+                setSilencio(true);
               }}
               className="rounded-lg bg-gray-100 px-2.5 py-1.5 text-sm text-slate-800 hover:bg-red-600 hover:text-white"
               title="Apagar radio"
             >
-              âœ•
+              ✕
             </button>
           </div>
         </div>
+      )}
+
+      {silencio && songs.length > 0 && (
+        <button
+          onClick={() => intentar(true)}
+          className="animate-pulse fixed bottom-5 left-1/2 z-[60] max-w-[92vw] -translate-x-1/2 truncate rounded-full bg-gradient-to-r from-red-600 to-rose-500 px-7 py-4 text-base font-black text-white shadow-xl shadow-red-400/40 transition hover:scale-105"
+        >
+          🔊 Toca aquí para escuchar la música · {actual.titulo}
+        </button>
       )}
     </>
   );
