@@ -10,7 +10,7 @@ const IG_USER = "garageclothingec";
 const IG_URL = `https://www.instagram.com/${IG_USER}/`;
 const IG_POSTS = ["https://www.instagram.com/reel/DGij1mIRHUi/"];
 
-const VIDEOS = Array.from({ length: 18 }, (_, i) => `/videos/video-${String(i + 1).padStart(2, "0")}.mp4`);
+const VIDEOS = Array.from({ length: 15 }, (_, i) => `/videos/video-${String(i + 1).padStart(2, "0")}.mp4`);
 
 type Prod = {
   id: number;
