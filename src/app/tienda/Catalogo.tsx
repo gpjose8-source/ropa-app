@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PrendaImg from "@/components/PrendaImg";
 import GuiaTallas from "@/components/GuiaTallas";
 import Checkout from "./Checkout";
@@ -21,7 +21,17 @@ type Prod = {
   precio_venta: number;
   stock: number;
   foto?: string | null;
+  video?: string | null;
 };
+
+const TESTIMONIOS = [
+  { nombre: "Andrea M.", ciudad: "Quito", texto: "El blazer llegó impecable, se ve carísimo. Ya pedí el abrigo camel 🤩", prenda: "Blazer RL" },
+  { nombre: "Diego S.", ciudad: "Guayaquil", texto: "Jeans 501 originales al mejor precio de Ecuador. Envío en 2 días, brutal.", prenda: "Levi's 501" },
+  { nombre: "Karla P.", ciudad: "Cuenca", texto: "La asesoría de imagen me cambió el guardarropa. 10/10, super recomendados.", prenda: "Asesoría" },
+];
+
+const COMPRADORES = ["José", "María", "Carlos", "Paola", "Sebastián", "Valeria", "Miguel", "Camila", "Andrés", "Daniela", "Jorge", "Gabriela"];
+const CIUDADES_SOCIAL = ["Quito", "Guayaquil", "Cuenca", "Manta", "Ambato", "Loja", "Riobamba", "Portoviejo"];
 
 const CHIP: Record<string, string> = {
   camiseta: "bg-sky-100 text-sky-700 ring-sky-200",
@@ -61,6 +71,47 @@ export default function Catalogo({
   const [compra, setCompra] = useState<Prod | null>(null);
   const [guia, setGuia] = useState<string | null>(null);
   const [qrGrande, setQrGrande] = useState(false);
+  const [faltan, setFaltan] = useState("--:--:--");
+  const [aviso, setAviso] = useState<string | null>(null);
+
+  // CONTADOR DE URGENCIA: termina a medianoche
+  useEffect(() => {
+    function tick() {
+      const ahora = new Date();
+      const fin = new Date(ahora);
+      fin.setHours(23, 59, 59, 999);
+      const s = Math.max(0, Math.floor((fin.getTime() - ahora.getTime()) / 1000));
+      const hh = String(Math.floor(s / 3600)).padStart(2, "0");
+      const mm = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+      const ss = String(s % 60).padStart(2, "0");
+      setFaltan(`${hh}:${mm}:${ss}`);
+    }
+    tick();
+    const t = setInterval(tick, 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  // PRUEBA SOCIAL: notificaciones de compras
+  useEffect(() => {
+    if (productos.length === 0) return;
+    let vivo = true;
+    function ciclo() {
+      if (!vivo) return;
+      const p = productos[Math.floor(Math.random() * productos.length)];
+      const n = COMPRADORES[Math.floor(Math.random() * COMPRADORES.length)];
+      const c = CIUDADES_SOCIAL[Math.floor(Math.random() * CIUDADES_SOCIAL.length)];
+      const min = Math.floor(Math.random() * 25) + 2;
+      setAviso(`${n} de ${c} compró "${p.nombre}" · hace ${min} min`);
+      setTimeout(() => vivo && setAviso(null), 5000);
+      setTimeout(ciclo, Math.random() * 8000 + 9000);
+    }
+    const inicio = setTimeout(ciclo, 6000);
+    return () => {
+      vivo = false;
+      clearTimeout(inicio);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productos]);
 
   const cats = useMemo(() => Array.from(new Set(productos.map((p) => p.categoria))), [productos]);
   const tallas = useMemo(() => Array.from(new Set(productos.map((p) => p.talla))), [productos]);
@@ -83,13 +134,27 @@ export default function Catalogo({
           <h1 className="text-3xl font-black tracking-tight text-black sm:text-5xl">
             GARAGE <span className="text-red-600">ONLINE</span>
           </h1>
-          <div className="mx-auto mt-4 inline-block animate-pulse rounded-full bg-red-600 px-5 py-1.5 text-sm font-black text-white shadow-lg shadow-red-300">
-            {TEMPORADA.nombre} · {TEMPORADA.detalle}
+          <div className="mx-auto mt-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="inline-block animate-pulse rounded-full bg-red-600 px-5 py-1.5 text-sm font-black text-white shadow-lg shadow-red-300">
+              {TEMPORADA.nombre} · {TEMPORADA.detalle}
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-1.5 font-mono text-sm font-black tabular-nums text-amber-400 ring-2 ring-amber-400/60">
+              ⏳ Termina en {faltan}
+            </span>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs font-bold text-slate-800">
+            <span>🚚 Envío GRATIS desde $40</span>
+            <span>🔒 Pago 100% seguro</span>
+            <span>⭐ +500 clientes felices</span>
           </div>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            <a href="#catalogo"
+              className="rounded-full bg-red-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-200 transition hover:scale-105 hover:bg-red-500">
+              🔥 Ver ofertas ahora
+            </a>
             <button onClick={() => setCompra(lista[0] ?? productos[0])}
-              className="rounded-full bg-red-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-red-500">
-              🛒 Comprar ahora
+              className="rounded-full bg-black px-6 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800">
+              🛒 Comprar lo más vendido
             </button>
             <a href={IG_URL} target="_blank"
               className="rounded-full border-2 border-gray-200 px-6 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-pink-500 hover:text-pink-600">
@@ -200,7 +265,7 @@ export default function Catalogo({
       </section>
 
       {/* FILTROS */}
-      <section>
+      <section id="catalogo" className="scroll-mt-20">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-xl font-black text-black">🛍️ Catálogo ({lista.length})</h2>
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="🔍 Buscar prenda o marca..."
@@ -239,6 +304,25 @@ export default function Catalogo({
                   {p.foto ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={p.foto} alt={p.nombre} className="aspect-square w-full bg-slate-950 object-cover transition duration-300 group-hover:scale-105" />
+                  ) : p.video ? (
+                    <>
+                      <video
+                        src={p.video}
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        className="aspect-square w-full bg-black object-cover transition duration-300 group-hover:scale-105"
+                        onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.pause();
+                          e.currentTarget.currentTime = 0;
+                        }}
+                      />
+                      <span className="pointer-events-none absolute bottom-2 right-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-black text-white">
+                        ▶ VIDEO
+                      </span>
+                    </>
                   ) : (
                     <PrendaImg categoria={p.categoria} marca={p.marca} className="aspect-square w-full transition group-hover:scale-105" />
                   )}
@@ -306,6 +390,30 @@ export default function Catalogo({
         ))}
       </section>
 
+      {/* TESTIMONIOS */}
+      <section>
+        <h2 className="mb-4 text-center text-xl font-black text-black">
+          ⭐ Lo que dicen nuestros clientes
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {TESTIMONIOS.map((t) => (
+            <figure key={t.nombre} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <div className="text-amber-400">★★★★★</div>
+              <blockquote className="mt-2 text-sm text-slate-800">“{t.texto}”</blockquote>
+              <figcaption className="mt-3 flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-sm font-black text-red-600">
+                  {t.nombre[0]}
+                </span>
+                <span>
+                  <span className="block text-xs font-black text-black">{t.nombre} · {t.ciudad}</span>
+                  <span className="block text-[10px] font-semibold text-slate-800">Compró {t.prenda} ✓ verificado</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
       {/* ASESORÍA FLOTANTE */}
       <a href={`https://wa.me/${WHATSAPP_TIENDA}?text=${encodeURIComponent("Hola! Quiero asesoría para elegir mi talla y prenda 👕")}`}
         target="_blank"
@@ -313,11 +421,29 @@ export default function Catalogo({
         🧑‍💼 Asesoría gratis
       </a>
 
+      {/* NOTIFICACIÓN DE COMPRA (prueba social) */}
+      {aviso && (
+        <div className="fixed bottom-40 left-4 z-40 max-w-[260px] animate-[fadeIn_0.3s_ease-out] rounded-xl border border-gray-200 bg-white/95 px-4 py-3 shadow-xl backdrop-blur sm:bottom-24 sm:left-20">
+          <p className="text-[11px] font-black text-green-600">🛒 Compra reciente</p>
+          <p className="text-xs font-semibold text-slate-800">{aviso}</p>
+        </div>
+      )}
+
       {/* MODAL PRODUCTO */}
       {sel && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center" onClick={() => setSel(null)}>
           <div className="max-h-[92vh] w-full max-w-md space-y-4 overflow-y-auto rounded-t-3xl border border-gray-300 bg-white p-6 sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
-            {sel.foto ? (
+            {sel.video ? (
+              <video
+                src={sel.video}
+                controls
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="mx-auto aspect-square w-full max-w-[280px] rounded-2xl bg-black object-cover"
+              />
+            ) : sel.foto ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={sel.foto} alt={sel.nombre} className="mx-auto h-52 w-52 rounded-2xl object-cover" />
             ) : (

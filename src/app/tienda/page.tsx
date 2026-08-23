@@ -38,6 +38,7 @@ export default async function TiendaPage() {
     precio_venta: p.precio_venta,
     stock: p.stock,
     foto: fotoDe(p.id),
+    video: p.video ? `/videos/${p.video}` : null,
   }));
   return <Catalogo productos={productos} qr={qr} urlTienda={URL_TIENDA} />;
 }

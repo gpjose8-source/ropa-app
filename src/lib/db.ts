@@ -100,6 +100,12 @@ export function db(): DatabaseSync {
     if (!tiene("direccion"))
       _db.exec("ALTER TABLE pedidos ADD COLUMN direccion TEXT DEFAULT ''");
 
+    const colsProductos = _db.prepare("PRAGMA table_info(productos)").all() as {
+      name: string;
+    }[];
+    if (!colsProductos.some((c) => c.name === "video"))
+      _db.exec("ALTER TABLE productos ADD COLUMN video TEXT DEFAULT NULL");
+
     const n = one<{ c: number }>("SELECT COUNT(*) c FROM productos");
     if ((n?.c ?? 0) === 0) {
       const demo: [string, string, string, string, number, number, number][] = [
@@ -149,6 +155,14 @@ export function db(): DatabaseSync {
       );
       for (const d of demo) ins.run(...d);
     }
+
+    // Asignar los 18 videos reales a las prendas más caras (orden determinista)
+    const tops = q<{ id: number }>(
+      "SELECT id FROM productos WHERE activo=1 ORDER BY precio_venta DESC LIMIT 18"
+    );
+    tops.forEach((r, i) => {
+      run("UPDATE productos SET video=? WHERE id=?", `video-${String(i + 1).padStart(2, "0")}.mp4`, r.id);
+    });
   }
   return _db;
 }
@@ -179,6 +193,7 @@ export type Producto = {
   precio_venta: number;
   stock: number;
   activo: number;
+  video?: string | null;
 };
 
 export type Cliente = {
