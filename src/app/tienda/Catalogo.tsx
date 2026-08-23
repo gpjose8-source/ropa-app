@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import PrendaImg from "@/components/PrendaImg";
@@ -10,7 +10,16 @@ const IG_USER = "garageclothingec";
 const IG_URL = `https://www.instagram.com/${IG_USER}/`;
 const IG_POSTS = ["https://www.instagram.com/reel/DGij1mIRHUi/"];
 
-const VIDEOS = Array.from({ length: 15 }, (_, i) => `/videos/video-${String(i + 1).padStart(2, "0")}.mp4`);
+const VIDEOS = Array.from({ length: 14 }, (_, i) => `/videos/video-${String(i + 1).padStart(2, "0")}.mp4`);
+
+const OFERTAS_CINTA = [
+  "🔥 REBAJAS DE TEMPORADA -15% EN TODO",
+  "🚚 ENVÍO GRATIS EN COMPRAS DESDE $40",
+  "👑 ROPA AMERICANA ORIGINAL PREMIUM",
+  "💳 PAGA CON TARJETA, TRANSFERENCIA O EFECTIVO",
+  "🎁 ASESORÍA DE IMAGEN GRATIS DESDE $150",
+  "⏳ SOLO HOY · PRECIOS DE LOCURA",
+];
 
 type Prod = {
   id: number;
@@ -91,6 +100,23 @@ export default function Catalogo({
     return () => clearInterval(t);
   }, []);
 
+  // ANIMACIONES AL HACER SCROLL
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("reveal-in");
+            obs.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll("[data-reveal]").forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
   // PRUEBA SOCIAL: notificaciones de compras
   useEffect(() => {
     if (productos.length === 0) return;
@@ -125,8 +151,19 @@ export default function Catalogo({
 
   return (
     <div className="space-y-10">
+      {/* CINTA DE OFERTAS */}
+      <div className="marquee-pausa -mx-4 overflow-hidden rounded-xl bg-black py-2.5 sm:-mx-6">
+        <div className="animate-marquee flex w-max gap-10 pr-10">
+          {[...OFERTAS_CINTA, ...OFERTAS_CINTA].map((o, i) => (
+            <span key={i} className={`whitespace-nowrap text-sm font-black ${i % 3 === 0 ? "text-red-500" : i % 3 === 1 ? "text-amber-400" : "text-white"}`}>
+              {o}
+            </span>
+          ))}
+        </div>
+      </div>
+
       {/* HERO */}
-      <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 via-red-500 to-rose-600 p-[1px]">
+      <section data-reveal className="animate-gradiente overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 via-rose-500 to-orange-500 p-[2px] shadow-2xl shadow-red-200">
         <div className="rounded-3xl bg-white px-6 py-10 text-center sm:px-12">
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-red-600">
             Ropa americana · Original · Segunda mano premium
@@ -177,7 +214,7 @@ export default function Catalogo({
       </section>
 
       {/* ASESORÍA DE IMAGEN */}
-      <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-gray-900 to-black p-[2px] shadow-2xl">
+      <section data-reveal className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-gray-900 to-black p-[2px] shadow-2xl">
         <div className="flex flex-col items-start gap-5 rounded-3xl p-6 sm:flex-row sm:items-center sm:p-8">
           <span className="text-5xl">👑</span>
           <div className="flex-1">
@@ -214,31 +251,39 @@ export default function Catalogo({
         </div>
       </section>
 
-      {/* VIDEOS REALES DE LAS PRENDAS */}
-      <section>
-        <h2 className="mb-1 text-xl font-black text-black">📹 Videos reales de la ropa</h2>
-        <p className="mb-4 text-sm text-slate-800">
-          Mira el detalle, la tela y la caída de cada prenda antes de comprar
-        </p>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {VIDEOS.map((v, i) => (
-            <video
-              key={v}
-              src={v}
-              controls
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="aspect-[9/16] w-full rounded-xl border border-gray-200 bg-black object-cover"
-              aria-label={`Video de prenda ${i + 1}`}
-            />
-          ))}
+      {/* VIDEOS REALES DE LAS PRENDAS — CARRUSEL DINÁMICO */}
+      <section data-reveal className="marquee-pausa">
+        <div className="mb-1 flex items-end justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-black text-black">📹 Videos reales de la ropa</h2>
+            <p className="text-sm text-slate-800">
+              Con música épica · pasa el cursor para pausar y toca para ver con sonido
+            </p>
+          </div>
+          <span className="animate-latido hidden rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white sm:inline-block">
+            ¡MIRA LA CALIDAD!
+          </span>
+        </div>
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 py-3">
+          <div className="animate-marquee-slow flex w-max gap-4 px-4">
+            {[...VIDEOS, ...VIDEOS].map((v, i) => (
+              <video
+                key={`${v}-${i}`}
+                src={v}
+                controls
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="aspect-[9/16] w-44 shrink-0 rounded-xl border border-gray-200 bg-black object-cover shadow-md transition hover:scale-[1.03] sm:w-52"
+              />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* INSTAGRAM */}
-      <section>
+      <section data-reveal>
         <h2 className="mb-4 text-xl font-black text-black">📸 Mira la ropa en acción</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {IG_POSTS.map((url) => (
@@ -373,7 +418,7 @@ export default function Catalogo({
       </section>
 
       {/* CONFIANZA */}
-      <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <section data-reveal className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {[
           ["🚚", "Entrega rápida", "Quito · Guayaquil", "from-sky-500 to-blue-600"],
           ["🔄", "Cambios fáciles", "Dentro de 48h", "from-violet-500 to-purple-600"],
@@ -391,7 +436,7 @@ export default function Catalogo({
       </section>
 
       {/* TESTIMONIOS */}
-      <section>
+      <section data-reveal>
         <h2 className="mb-4 text-center text-xl font-black text-black">
           ⭐ Lo que dicen nuestros clientes
         </h2>

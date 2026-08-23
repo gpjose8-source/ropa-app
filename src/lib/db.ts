@@ -156,9 +156,9 @@ export function db(): DatabaseSync {
       for (const d of demo) ins.run(...d);
     }
 
-    // Asignar los 15 videos reales a las prendas más caras (orden determinista)
+    // Asignar los 14 videos reales a las prendas más caras (orden determinista)
     const tops = q<{ id: number }>(
-      "SELECT id FROM productos WHERE activo=1 ORDER BY precio_venta DESC LIMIT 15"
+      "SELECT id FROM productos WHERE activo=1 ORDER BY precio_venta DESC LIMIT 14"
     );
     tops.forEach((r, i) => {
       run("UPDATE productos SET video=? WHERE id=?", `video-${String(i + 1).padStart(2, "0")}.mp4`, r.id);
